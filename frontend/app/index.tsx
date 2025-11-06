@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import getUser from '@/utils/auth';
+import { getUser } from '@/utils/auth';
 import { Button } from '@/components/Button';
 import { View, Text, TextInput } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     async function checkUser() {
       const currentUser = await getUser();
-      if(!currentUser){
+      if(currentUser == null){
         router.replace('/screens/login');
       }
       else{
