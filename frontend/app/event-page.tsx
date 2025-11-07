@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { View, Text, Modal, ScrollView, TextInput, Button } from "react-native"
 import IconButton from "@/components/IconButton";
+import OrgCard from "@/components/OrgCard";
 
 export default function EventPage() {
     const { eventName, eventId } = useLocalSearchParams();
@@ -26,7 +27,22 @@ export default function EventPage() {
                         <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleModal} ></IconButton>
                     </View>
                     <View className={"flex-row gap-4"}>
-                        <TextInput className={'border rounded'} placeholder={"Email"} />
+                        <ScrollView className={"mt-8 mb-8 flex-shrink-0"}>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                            <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
+                        </ScrollView>
                     </View>
                     </View>
                 </View>
