@@ -44,3 +44,8 @@ export async function verifyOtp(email:string, token: string): Promise<string>{
     }
     return "";
 }
+
+// remove access_token to sign out
+export async function signOut(){
+    SecureStore.deleteItemAsync("access_token");
+}

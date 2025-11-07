@@ -1,13 +1,12 @@
 import { useRouter } from 'expo-router';
 import { getUser } from '@/utils/auth';
-import { Button } from '@/components/Button';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text } from 'react-native';
 import { useEffect, useState } from 'react';
+import { signOut } from '@/utils/auth';
+import { Button } from '@/components/Button';
 
 export default function Home() {
   const router = useRouter();
-  const [isLoading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
     async function checkUser() {
@@ -22,9 +21,15 @@ export default function Home() {
     checkUser();
   }, [])
 
+  async function handleSignOut(){
+      signOut();
+      router.replace("/login/login");
+  }
+
   return (
     <View className={styles.container} >
       <Text>This is the homepage, you are logged in.</Text>
+      <Button title={'Sign Out'} onPress={handleSignOut} />
     </View>
   );
 }
