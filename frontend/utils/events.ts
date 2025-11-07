@@ -1,11 +1,28 @@
-import SecureStorage from 'expo-secure-store'
+import * as SecureStore from 'expo-secure-store';
 
-// Get my events
-async function getEvents(){
-    fetch("", {
-        headers: {
-            'Content-Type': 'application/json', 
-            'Authorization': SecureStorage.getItem('access_token')
+// Get events
+export async function getEvents(){
+    let events = null;
+    const email = await SecureStore.getItemAsync("email");
+    const token = await SecureStore.getItemAsync("access_token");
+    const response = await fetch(
+        "https://2786d94c8af7.ngrok-free.app/event/my-events",
+        {
+            headers: {"Authorization": `Bearer ${token}`, 
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify({email}),
+            method: "POST"
         }
-    })
+    )
+
+    if (response.ok){
+        const res = await response.json();
+        console.log(res['events']);
+        events = res['events']
+    }
+
+    console.log(events)
+
+    return events;
 }
