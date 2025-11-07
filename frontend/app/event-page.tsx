@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { View, Text, Modal, ScrollView, TextInput, Button } from "react-native"
+import { View, Text, Modal, ScrollView, TextInput } from "react-native"
+import { Button } from "@/components/Button";
 import IconButton from "@/components/IconButton";
 import OrgCard from "@/components/OrgCard";
 
@@ -44,9 +45,9 @@ export default function EventPage() {
                                     <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
                                     <OrgCard name={"Raghav Kumar"} email={"kumaraghav079@gmail.com"} ></OrgCard>
                                 </ScrollView>
-                                <View className={"flex-row flex justify-between"}>
-                                    <TextInput style={{minWidth: '450'}} className={"border"} placeholder="Email"></TextInput>
-                                    <Button title="Hello"></Button>
+                                <View className={"flex-row flex justify-between items-center"}>
+                                    <TextInput className={"border-b flex-1 mr-4"} placeholder="Email"></TextInput>
+                                    <IconButton iconName="add" iconSize={24} ></IconButton>
                                 </View>
                             </View>
                         </View>
