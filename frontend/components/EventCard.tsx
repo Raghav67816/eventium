@@ -1,4 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 import { View, Text, Pressable } from "react-native";
 
 type EventCardProps = {
@@ -18,9 +19,22 @@ export default function EventCard({
   eventId,
   currentParticipants,
 }: EventCardProps) {
+
+    function onPress__(){
+        router.replace({
+            pathname: "/event",
+            params: {
+                eventName: event_name,
+                eventId: eventId
+            }
+        })
+    }
+
+    const router = useRouter();
+
   return (
     <View className={'shadow rounded rounded p-8'}>
-      <Pressable>
+      <Pressable onPress={onPress__}>
         <Text className={"font-bold text-2xl"}>{event_name}</Text>
         <View className={'mt-8 gap-2'}>
             <View className={'gap-2 flex-row items-center'}>
