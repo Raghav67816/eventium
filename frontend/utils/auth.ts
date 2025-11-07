@@ -11,7 +11,7 @@ export async function getUser() {
 
 // Request a magic link
 export async function requestMagicLink(email: string){
-    let response = await fetch("https://a8bd56213a94.ngrok-free.app/auth/get-magic-link", {
+    let response = await fetch("https://2f855116ebc2.ngrok-free.app/auth/get-magic-link", {
         method: "POST",
         headers: {'Cotent-Type': 'application/json'},
         body: JSON.stringify({ email })
@@ -24,7 +24,7 @@ export async function requestMagicLink(email: string){
 
 // Verify Otp
 export async function verifyOtp(email:string, token: string): Promise<string>{
-    let response = await fetch("https://a8bd56213a94.ngrok-free.app/auth/verify-otp", {
+    let response = await fetch("https://2f855116ebc2.ngrok-free.app/auth/verify-otp", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({email, token})

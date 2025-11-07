@@ -6,7 +6,7 @@ export async function getEvents(){
     const email = await SecureStore.getItemAsync("email");
     const token = await SecureStore.getItemAsync("access_token");
     const response = await fetch(
-        "https://a8bd56213a94.ngrok-free.app/event/my-events",
+        "https://2f855116ebc2.ngrok-free.app/event/my-events",
         {
             headers: {"Authorization": `Bearer ${token}`, 
             "Content-Type": "application/json"
