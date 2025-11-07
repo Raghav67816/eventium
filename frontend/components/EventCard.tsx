@@ -22,7 +22,7 @@ export default function EventCard({
 
     function onPress__(){
         router.replace({
-            pathname: "/event",
+            pathname: "/event-page",
             params: {
                 eventName: event_name,
                 eventId: eventId
