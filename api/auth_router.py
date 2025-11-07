@@ -28,28 +28,31 @@ async def get_magic_link(request: Request):
             status_code=401, detail="email required"
         )
     else:
-        s_client.auth.sign_in_with_otp({
-            "email": email,
-            "options": {
-                "should_create_user": False,
-                "email_redirect_to": "exp://192.168.1.39:8081/auth-callback"
-            }
-        })
+        s_client.auth.sign_in_with_otp({"email": email})
         return JSONResponse(
             status_code=200, content={'msg': 'sent'}
         )
     
-@auth_router.post("/verify-jwt")
-def verify_jwt(token: str):
-    res = requests.get(
-        f"{url}/auth/v1/user",
-        headers={
-            "apiKey": key
-        }
-    )
+@auth_router.post("/verify-otp")
+async def verify_otp(request: Request):
+    req = await request.json()
+    res = s_client.auth.verify_otp(params={
+        "email": req['email'],
+        "token": req['token'],
+        "type": "email"
+    })
 
-    if res.status_code == 200:
-        return JSONResponse(status_code=200, content={"msg": "success"})
-    
+    if res:
+        return JSONResponse(
+            status_code=200, content={
+                "msg": "success",
+                "access_token": str(res.session.access_token)
+            }
+        )
+
     else:
-        return JSONResponse(status_code=200, content={"msg": "failed"})
+        return JSONResponse(
+            status_code=200, content={
+                "msg": "failed"
+            }
+        )

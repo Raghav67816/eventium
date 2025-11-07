@@ -13,7 +13,7 @@ export default function Home() {
     async function checkUser() {
       const currentUser = await getUser();
       if(currentUser == null){
-        router.replace('/screens/login');
+        router.replace('/login/login');
       }
       else{
         return null;

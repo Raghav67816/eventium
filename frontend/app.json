@@ -5,8 +5,8 @@
     "version": "1.0.0",
     "scheme": "frontend",
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "web"
     ],
     "web": {
       "bundler": "metro",

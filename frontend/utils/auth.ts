@@ -2,7 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 
 // Get logged in user
 export async function getUser() {
-    let result = await SecureStore.getItemAsync("username");
+    let result = await SecureStore.getItemAsync("access_token");
     if (result){
         return result;
     }
@@ -11,25 +11,36 @@ export async function getUser() {
 
 // Request a magic link
 export async function requestMagicLink(email: string){
-    let response = await fetch("https://ceaed5f7871b.ngrok-free.app/auth/get-magic-link", {
+    let response = await fetch("https://31e9b71b3b47.ngrok-free.app/auth/get-magic-link", {
         method: "POST",
         headers: {'Cotent-Type': 'application/json'},
         body: JSON.stringify({ email })
     })
     if(response.status == 200){
-        console.log("Request accepted");
+        return "success";
     }
+    return "failed"
 }
 
-// verify jwt token
-export async function verifyJwt(token: string): Promise<string>{
-    let response = await fetch("https://ceaed5f7871b.ngrok-free.app/auth/verify-jwt", {
+// Verify Otp
+export async function verifyOtp(email:string, token: string): Promise<string>{
+    let response = await fetch("https://31e9b71b3b47.ngrok-free.app/auth/verify-otp", {
         method: "POST",
-        headers: {'Cotent-Type': 'application/json'},
-        body: JSON.stringify({ token })
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email, token})
     })
     if(response.status == 200){
-        return "token verified";
+        let res = await response.json();
+        if (res['msg'] == "success" && res['access_token']){
+            console.log(res['access_token'])
+            SecureStore.setItemAsync("access_token", res['access_token'])
+            return "success"
+        }
+    }
+
+    else{
+        console.log("failed");
+        return "failed"
     }
     return "";
 }
