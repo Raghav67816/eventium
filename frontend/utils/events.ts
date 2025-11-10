@@ -1,8 +1,10 @@
 import * as SecureStore from 'expo-secure-store';
+import { Participant } from '@/components/ParticipantCard';
 
-const url = "https://1c8e999fcffb.ngrok-free.app"
+const url = "https://994bc5592bbd.ngrok-free.app"
 
 export type Org = {
+    name: string,
     email: string,
 };
 
@@ -22,6 +24,8 @@ export async function getEvents(){
         }
     )
 
+    console.log(email);
+
     if (response.ok){
         const res = await response.json();
         console.log(res['events']);
@@ -35,7 +39,7 @@ export async function getEvents(){
 
 // Add orgs to view
 export async function addOrgsToView(eventId: string): Promise<Array<Org>>{
-    let orgs = null;
+    let orgs = [];
     const response = await fetch(
         `${url}/event/query/general`,
         {
@@ -55,4 +59,26 @@ export async function addOrgsToView(eventId: string): Promise<Array<Org>>{
     console.log("error");
     console.log(orgs);
     return orgs;
+}
+
+// Fetch participants
+export async function getParticipants(eventId: string): Promise<Array<Participant>>{
+    let participants = []
+    const response = await fetch(
+        `${url}/event/query/general`, {
+            method: "POST",
+            body: JSON.stringify({
+                "id": eventId,
+                "field": "participants"
+            })
+        }
+    )
+
+    if (response.ok){
+        const data_ = await response.json();
+        participants = data_.data.participants;
+    }
+
+    console.log(participants);
+    return participants;
 }

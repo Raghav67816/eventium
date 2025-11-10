@@ -15,14 +15,18 @@ valid_fields = [
 @events_router.post("/my-events")
 async def get_my_events(request: Request):
     data = await request.json()
-    events = s_client.table("events").select("*").contains(
-        "organisers", [data['email']]
-    ).execute()
+    events = s_client.table("events").select("*").execute()
+
     if events:
+        events_ = [
+            event for event in events.data
+            if any(org.get("email") == data["email"] for org in event.get("organisers", []))
+        ]
+
         return JSONResponse(
             status_code=200, content={
                 "msg": "success",
-                "events": events.data
+                "events": events_
             }
         )
    

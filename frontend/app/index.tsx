@@ -5,6 +5,7 @@ import { View, Text } from 'react-native';
 import { useEffect, useState } from 'react';
 import { signOut } from '@/utils/auth';
 import { getEvents } from '@/utils/events';
+import { Button } from '@/components/Button';
 
 export default function Home() {
   const router = useRouter();
@@ -28,9 +29,16 @@ export default function Home() {
     router.replace("/login/login");
   }
 
+  function goToNewEvent(){
+    router.replace("/new-event")
+  }
+
   return (
     <View className={'p-8 gap-8'} >
-      <Text className={'text-xl font-semibold mt-4 mb-4'}>My Events</Text>
+      <View className={'flex-row justify-between item-center'}>
+        <Text className={'text-xl font-semibold mt-4 mb-4'}>My Events</Text>
+        <Button title={'New Event'} onPress={handleSignOut} ></Button>
+      </View>
       {events.map((event_, index) => (
         <EventCard
           key={index}
