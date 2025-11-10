@@ -1,12 +1,12 @@
 import Fuse from "fuse.js";
 import { Org } from "@/utils/events";
 import OrgCard from "@/components/OrgCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/Button";
 import { addOrgsToView } from "@/utils/events";
 import { getParticipants } from "@/utils/events";
 import IconButton from "@/components/IconButton";
-import {Picker} from "@react-native-picker/picker";
+import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import ParticipantCard, { Participant } from "@/components/ParticipantCard";
 import { View, Text, Modal, ScrollView, TextInput, FlatList } from "react-native"
@@ -15,23 +15,27 @@ export default function EventPage() {
     const router = useRouter();
     const { eventName, eventId } = useLocalSearchParams();
     const [isVisible, setVisible] = useState(false);
-    var [orgs, setOrgs] = useState<Org[]>([]);
-    var [participants, setParticipants] = useState<Participant[]>([]);
-    var [filteredContent, setFilteredContent] = useState<Participant[]>([]);
+    const [input, setInput] = useState("");
+    const [orgs, setOrgs] = useState<Org[]>([]);
+    const [participants, setParticipants] = useState<Participant[]>([]);
+    const [filteredContent, setFilteredContent] = useState<Participant[]>([]);
 
-    
-    const fuse = new Fuse(participants, {
-        keys: ['name', 'email', 'phone'],
-        threshold: 0.5,
-    });
-    
-    var participants_ = [];
-    const search = (text: string) => {
-        participants_ = participants;
-        if(!text.trim()) return setFilteredContent(participants);
-        const results = fuse.search(text);
-        setFilteredContent(results.map(i => i.item));
-    };
+    const fuse = useMemo(() => {
+        return new Fuse(participants, {
+            keys: ['name', 'email', 'phone'],
+            threshold: 0.5,
+        });
+    }, [participants]);
+
+    function onTextChange(text: string) {
+        setInput(text);
+        if (!text.trim()) {
+            setFilteredContent(participants);
+        } else {
+            const results = fuse.search(text);
+            setFilteredContent(results.map(i => i.item));
+        }
+    }
 
     function toggleModal() {
         setVisible(!isVisible);
@@ -50,6 +54,7 @@ export default function EventPage() {
         const fetchParticipants = async () => {
             const participants_ = await getParticipants(eventId.toString());
             setParticipants(participants_);
+            setFilteredContent(participants_);
         }
 
         fetchOrgs();
@@ -85,7 +90,7 @@ export default function EventPage() {
                     </View>
                 </View>
             </Modal>
-            <View className={"flex-row justify-between py-4 border-b"}>
+            <View className={"flex-row justify-between py-4"}>
                 <View className={"flex-row gap-4 items-center"}>
                     <IconButton iconName={"arrow-back"} iconSize={18} onPressExec={toHome} />
                     <Text className={"font-semibold text-xl"}>{eventName}</Text>
@@ -97,8 +102,15 @@ export default function EventPage() {
             </View>
             <View className="mt-8 px-4">
                 <View className={"flex-row justify-between mb-8"}>
-                    <TextInput style={{width: '75%'}} className={"bg-gray-200 rounded px-4"} placeholder={"Type Something..."}></TextInput>
-                    <Picker prompt={"Filter"} style={{width: '20%'}} mode={'dropdown'} enabled={true} >
+                    <TextInput
+                        onChangeText={onTextChange}
+                        style={{ width: '75%' }}
+                        className={"bg-gray-200 rounded px-4"}
+                        placeholder={"Type Something..."}
+                        value={input}
+                    >
+                    </TextInput>
+                    <Picker prompt={"Filter"} style={{ width: '20%' }} mode={'dropdown'} enabled={true} >
                         <Picker.Item label={"Name"} value={"name"} />
                         <Picker.Item label={"Email"} value={"email"} />
                         <Picker.Item label={"Phone Number"} value={"phone"} />
@@ -106,7 +118,7 @@ export default function EventPage() {
                     </Picker>
                 </View>
                 <FlatList
-                    data={participants}
+                    data={filteredContent}
                     keyExtractor={(_, index) => index.toString()}
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: "space-between", marginBottom: 16, gap: 32 }}
