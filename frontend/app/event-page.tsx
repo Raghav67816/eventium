@@ -1,3 +1,4 @@
+import Fuse from "fuse.js";
 import { Org } from "@/utils/events";
 import OrgCard from "@/components/OrgCard";
 import { useEffect, useState } from "react";
@@ -5,8 +6,9 @@ import { Button } from "@/components/Button";
 import { addOrgsToView } from "@/utils/events";
 import { getParticipants } from "@/utils/events";
 import IconButton from "@/components/IconButton";
-import ParticipantCard, { Participant } from "@/components/ParticipantCard";
+import {Picker} from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import ParticipantCard, { Participant } from "@/components/ParticipantCard";
 import { View, Text, Modal, ScrollView, TextInput, FlatList } from "react-native"
 
 export default function EventPage() {
@@ -15,7 +17,21 @@ export default function EventPage() {
     const [isVisible, setVisible] = useState(false);
     var [orgs, setOrgs] = useState<Org[]>([]);
     var [participants, setParticipants] = useState<Participant[]>([]);
+    var [filteredContent, setFilteredContent] = useState<Participant[]>([]);
 
+    
+    const fuse = new Fuse(participants, {
+        keys: ['name', 'email', 'phone'],
+        threshold: 0.5,
+    });
+    
+    var participants_ = [];
+    const search = (text: string) => {
+        participants_ = participants;
+        if(!text.trim()) return setFilteredContent(participants);
+        const results = fuse.search(text);
+        setFilteredContent(results.map(i => i.item));
+    };
 
     function toggleModal() {
         setVisible(!isVisible);
@@ -79,7 +95,16 @@ export default function EventPage() {
                     <IconButton iconName={"settings-outline"} iconSize={24} onPressExec={toggleModal} />
                 </View>
             </View>
-            <View className="mt-16 px-4">
+            <View className="mt-8 px-4">
+                <View className={"flex-row justify-between mb-8"}>
+                    <TextInput style={{width: '75%'}} className={"bg-gray-200 rounded px-4"} placeholder={"Type Something..."}></TextInput>
+                    <Picker prompt={"Filter"} style={{width: '20%'}} mode={'dropdown'} enabled={true} >
+                        <Picker.Item label={"Name"} value={"name"} />
+                        <Picker.Item label={"Email"} value={"email"} />
+                        <Picker.Item label={"Phone Number"} value={"phone"} />
+                        <Picker.Item label={"Age"} value={"age"} />
+                    </Picker>
+                </View>
                 <FlatList
                     data={participants}
                     keyExtractor={(_, index) => index.toString()}
@@ -99,8 +124,6 @@ export default function EventPage() {
                     showsVerticalScrollIndicator={false}
                 />
             </View>
-
         </View>
-
     )
 }

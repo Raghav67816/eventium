@@ -9,7 +9,7 @@ export type Participant = {
 
 export default function ParticipantCard({ id, email, phone, age }: Participant) {
   return (
-    <View className="flex-1 bg-blue-600 rounded-2xl p-4 justify-between min-h-[120px]">
+    <View className="bg-blue-600 rounded-2xl p-4 w-full min-h-[140px] max-h-[140px] justify-between">
       <View>
         <Text className="font-semibold text-lg text-white">{id}</Text>
         <Text className="font-light text-sm text-white mt-1">{age} yrs</Text>
