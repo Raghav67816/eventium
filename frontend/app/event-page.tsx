@@ -1,24 +1,31 @@
 import Fuse from "fuse.js";
 import { Org } from "@/utils/events";
 import OrgCard from "@/components/OrgCard";
-import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/Button";
 import { addOrgsToView } from "@/utils/events";
+import { useCameraPermissions, CameraView } from "expo-camera";
 import { getParticipants } from "@/utils/events";
 import IconButton from "@/components/IconButton";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import ParticipantCard, { Participant } from "@/components/ParticipantCard";
-import { View, Text, Modal, ScrollView, TextInput, FlatList } from "react-native"
+import { View, Text, Modal, ScrollView, TextInput, FlatList, StyleSheet } from "react-native"
 
 export default function EventPage() {
     const router = useRouter();
     const { eventName, eventId } = useLocalSearchParams();
-    const [isVisible, setVisible] = useState(false);
+    const [perm, requestPerm] = useCameraPermissions();
+    const [isOrgModalVisible, setOrgModalVisible] = useState(false);
+    let [isQrModalVisible, setQrModalVisible] = useState(false);
     const [input, setInput] = useState("");
     const [orgs, setOrgs] = useState<Org[]>([]);
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [filteredContent, setFilteredContent] = useState<Participant[]>([]);
+
+    if (!perm?.granted) {
+        console.log("not granted");
+    }
 
     const fuse = useMemo(() => {
         return new Fuse(participants, {
@@ -37,8 +44,22 @@ export default function EventPage() {
         }
     }
 
-    function toggleModal() {
-        setVisible(!isVisible);
+    function toggleOrgModal() {
+        setOrgModalVisible(!isOrgModalVisible);
+    }
+
+    async function toggleQrModal() {
+        if (!perm?.granted) {
+            const permReq = await requestPerm();
+            if (permReq.granted) {
+                isQrModalVisible = true;
+                setQrModalVisible(isQrModalVisible);
+            }
+        }
+
+        if (perm?.granted) {
+            setQrModalVisible(!isQrModalVisible);
+        }
     }
 
     function toHome() {
@@ -61,20 +82,24 @@ export default function EventPage() {
         fetchParticipants();
     }, [])
 
+    function onBarcodeScanned(){
+        console.log("Oh yess");
+    }
+
     return (
         <View className={'p-8'}>
             <Modal
-                visible={isVisible}
+                visible={isOrgModalVisible}
                 animationType="slide"
                 transparent={true}
             >
                 <View className="flex-1 justify-center items-center bg-black/50">
-                    <View className="w-5/6 h-1/2 bg-white rounded-xl p-6 shadow-2xl">
+                    <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Organisers</Text>
-                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleModal} ></IconButton>
+                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleOrgModal} ></IconButton>
                         </View>
-                        <View className={"mb-32"}>
+                        <View>
                             <View className={"mb-8"}>
                                 <ScrollView className={"mt-8 mb-8"}>
                                     {orgs.map((org, index) => (
@@ -82,8 +107,30 @@ export default function EventPage() {
                                     ))}
                                 </ScrollView>
                                 <View className={"flex-row flex justify-between items-center"}>
-                                    <TextInput className={"border-b flex-1 mr-4"} placeholder="Email"></TextInput>
-                                    <Button title={"Add"}></Button>
+                                    <TextInput className={" w-[75%] bg-gray-200 rounded px-4"} placeholder="Email"></TextInput>
+                                    <Button className={"w-[20%]"} title={"Add"}></Button>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+            <Modal
+                visible={isQrModalVisible}
+                animationType="slide"
+                transparent={true}
+            >
+                <View className="flex-1 justify-center items-center bg-black/50">
+                    <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
+                        <View className={"flex-row items-center justify-between"}>
+                            <Text className="text-xl font-bold">Scan Qr Code</Text>
+                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleQrModal} ></IconButton>
+                        </View>
+                        <View>
+                            <View className={"mb-8"}>
+                                <Text>Use this to manage check-in and food.</Text>
+                                <View className={"w-full aspect-square mt-8 mb-8 overflow-hidden rounded-lg"}>
+                                    <CameraView style={styles.cview} facing={"back"} onBarcodeScanned={onBarcodeScanned} />
                                 </View>
                             </View>
                         </View>
@@ -96,8 +143,9 @@ export default function EventPage() {
                     <Text className={"font-semibold text-xl"}>{eventName}</Text>
                 </View>
                 <View className={"flex-row gap-4 self-right"}>
-                    <IconButton iconName={"people-outline"} iconSize={24} onPressExec={toggleModal} />
-                    <IconButton iconName={"settings-outline"} iconSize={24} onPressExec={toggleModal} />
+                    <IconButton iconName={"people"} iconSize={24} onPressExec={toggleOrgModal} />
+                    <IconButton iconName={"settings"} iconSize={24} onPressExec={toggleOrgModal} />
+                    <IconButton iconName={"qr-code-sharp"} iconSize={24} onPressExec={toggleQrModal} />
                 </View>
             </View>
             <View className="mt-8 px-4">
@@ -139,3 +187,10 @@ export default function EventPage() {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    cview: {
+        flex: 1,
+        width: "100%",
+    }
+})
