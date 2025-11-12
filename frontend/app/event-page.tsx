@@ -97,7 +97,7 @@ export default function EventPage() {
                     <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Organisers</Text>
-                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleOrgModal} ></IconButton>
+                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleOrgModal} iconColor={""} ></IconButton>
                         </View>
                         <View>
                             <View className={"mb-8"}>
@@ -124,7 +124,7 @@ export default function EventPage() {
                     <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Scan Qr Code</Text>
-                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleQrModal} ></IconButton>
+                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleQrModal} iconColor={""} ></IconButton>
                         </View>
                         <View>
                             <View className={"mb-8"}>
@@ -139,13 +139,13 @@ export default function EventPage() {
             </Modal>
             <View className={"flex-row justify-between py-4"}>
                 <View className={"flex-row gap-4 items-center"}>
-                    <IconButton iconName={"arrow-back"} iconSize={18} onPressExec={toHome} />
+                    <IconButton iconName={"arrow-back"} iconSize={18} onPressExec={toHome} iconColor={""} />
                     <Text className={"font-semibold text-xl"}>{eventName}</Text>
                 </View>
                 <View className={"flex-row gap-4 self-right"}>
-                    <IconButton iconName={"people"} iconSize={24} onPressExec={toggleOrgModal} />
-                    <IconButton iconName={"settings"} iconSize={24} onPressExec={toggleOrgModal} />
-                    <IconButton iconName={"qr-code-sharp"} iconSize={24} onPressExec={toggleQrModal} />
+                    <IconButton iconName={"people"} iconSize={24} onPressExec={toggleOrgModal} iconColor={""} />
+                    <IconButton iconName={"settings"} iconSize={24} onPressExec={toggleOrgModal} iconColor={""} />
+                    <IconButton iconName={"qr-code-sharp"} iconSize={24} onPressExec={toggleQrModal} iconColor={""} />
                 </View>
             </View>
             <View className="mt-8 px-4">
