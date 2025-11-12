@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Participant } from '@/components/ParticipantCard';
 
-const url = "https://d121a8ca5235.ngrok-free.app"
+const url = "https://cbe365c0cdda.ngrok-free.app"
 
 export type Org = {
     name: string,

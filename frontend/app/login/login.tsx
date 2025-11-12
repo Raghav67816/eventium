@@ -1,6 +1,6 @@
 import { Button } from '@/components/Button';
 import { requestMagicLink } from '@/utils/auth';
-import { router, useRouter } from 'expo-router';
+import { Link, router, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
 
@@ -38,7 +38,10 @@ export default function Login() {
           placeholder='Your Email' 
           textContentType={'emailAddress'} />
         <Text className={'mt-5'}>We will send you a magic link. Check your email</Text>
-        <Button title={'Submit'} className='mt-20 bg-black' onPress={sendRequest} />
+        <View className={'gap-6 items-center'}>
+          <Button title={'Submit'} className='mt-20 w-1/2 bg-black' onPress={sendRequest} />
+          <Link href={"/login/signup"} className={'text-md underline'}>Create New Account</Link>
+        </View>
       </View>
     </View>
   );

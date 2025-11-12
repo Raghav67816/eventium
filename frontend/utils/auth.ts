@@ -1,11 +1,14 @@
 import * as SecureStore from 'expo-secure-store';
 
-const endpoint = "https://d121a8ca5235.ngrok-free.app"
+const endpoint = "https://a32bff925eb0.ngrok-free.app"
 
 // Get logged in user
+
+// for me - force to login page.
 export async function getUser() {
     let result = await SecureStore.getItemAsync("access_token");
     if (result){
+        result = null;
         return result;
     }
     return null;
@@ -52,3 +55,29 @@ export async function verifyOtp(email:string, token: string): Promise<string>{
 export async function signOut(){
     SecureStore.deleteItemAsync("access_token");
 }
+
+// register user
+export async function signUp(
+    email: string, name: string, phone: string, password: string
+){
+    let status = "failed";
+    const resp = await fetch(`${endpoint}/auth/signup`, {
+        method: "POST",
+        headers: {
+            "Cotent-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "email": email,
+            "name": name,
+            "phone": phone,
+            "password": password
+        })
+    })
+    
+    if(resp.ok){
+        status = "success";
+    }
+
+    return status;
+}
+

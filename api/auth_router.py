@@ -6,6 +6,41 @@ from fastapi.exceptions import HTTPException
 
 auth_router = APIRouter(prefix="/auth")
 
+@auth_router.post("/signup")
+async def signup(request: Request):
+    data = await request.json()
+    user = s_client.auth.sign_up({
+        "email": data['email'],
+        "phone": data['phone'],
+        "password": data['password'],
+        "options": {
+            "data": {
+                "name": data['name']
+            }
+        }
+    })
+
+    if user == "User already registered":
+        return JSONResponse(
+            status_code=200,
+            content={
+                "msg": "failed",
+                "detail": "already exists"
+            }
+        )
+    
+    else:
+        s_client.table("users").insert({
+            "name": data['name'],
+            "email": data['email']
+        }).execute()
+        return JSONResponse(
+            status_code=200,
+            content={
+                "msg": "success",
+            }
+        )
+
 @auth_router.post("/get-magic-link")
 async def get_magic_link(request: Request):
     data = await request.json()
