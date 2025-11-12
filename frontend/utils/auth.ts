@@ -3,12 +3,10 @@ import * as SecureStore from 'expo-secure-store';
 const endpoint = "https://a32bff925eb0.ngrok-free.app"
 
 // Get logged in user
-
-// for me - force to login page.
 export async function getUser() {
     let result = await SecureStore.getItemAsync("access_token");
+    SecureStore.deleteItemAsync("access_token"); // for temp use only
     if (result){
-        result = null;
         return result;
     }
     return null;
@@ -29,7 +27,7 @@ export async function requestMagicLink(email: string){
 
 // Verify Otp
 export async function verifyOtp(email:string, token: string): Promise<string>{
-    let response = await fetch(`${endpoint}auth/verify-otp`, {
+    let response = await fetch(`${endpoint}/auth/verify-otp`, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({email, token})
@@ -37,7 +35,6 @@ export async function verifyOtp(email:string, token: string): Promise<string>{
     if(response.status == 200){
         let res = await response.json();
         if (res['msg'] == "success" && res['access_token']){
-            console.log(res['access_token'])
             SecureStore.setItemAsync("access_token", res['access_token'])
             SecureStore.setItemAsync("email", email)
             return "success"

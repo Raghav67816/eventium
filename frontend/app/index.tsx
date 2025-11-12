@@ -14,11 +14,14 @@ export default function Home() {
   useEffect(() => {
     async function checkUser() {
       const currentUser = await getUser();
-      // inetetionally setting it null, forcing router to go to login.
       if (currentUser == null) {
         router.replace('/login/login');
       }
       else {
+        const events = await getEvents();
+        if(events == null){
+          return;
+        }
         setEvents(await getEvents());
       }
     }

@@ -2,7 +2,7 @@ from client import s_client
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Request
 from fastapi.exceptions import HTTPException
-
+from supabase_auth.errors import AuthApiError
 
 auth_router = APIRouter(prefix="/auth")
 
@@ -57,24 +57,34 @@ async def get_magic_link(request: Request):
     
 @auth_router.post("/verify-otp")
 async def verify_otp(request: Request):
-    req = await request.json()
-    res = s_client.auth.verify_otp(params={
-        "email": req['email'],
-        "token": req['token'],
-        "type": "email"
-    })
+    try:
+        req = await request.json()
+        res = s_client.auth.verify_otp(params={
+            "email": req['email'],
+            "token": req['token'],
+            "type": "email"
+        })
 
-    if res:
-        return JSONResponse(
-            status_code=200, content={
-                "msg": "success",
-                "access_token": str(res.session.access_token)
-            }
-        )
+        if res:
+            user = s_client.table("users").select("id").eq("email", req['email']).execute()
+            print(user)
+            return JSONResponse(
+                status_code=200, content={
+                    "msg": "success",
+                    "access_token": str(res.session.access_token),
+                }
+            )
 
-    else:
+        else:
+            return JSONResponse(
+                status_code=200, content={
+                    "msg": "failed"
+                }
+            )
+        
+    except AuthApiError:
         return JSONResponse(
-            status_code=200, content={
-                "msg": "failed"
-            }
-        )
+                status_code=200, content={
+                    "msg": "failed"
+                }
+            )
