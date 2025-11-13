@@ -2,10 +2,12 @@ import EventCard from '@/components/EventCard';
 import { useRouter } from 'expo-router';
 import { getUser } from '@/utils/auth';
 import { View, Text } from 'react-native';
+import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { signOut } from '@/utils/auth';
 import { getEvents } from '@/utils/events';
 import { Button } from '@/components/Button';
+
 
 export default function Home() {
   const router = useRouter();
@@ -33,17 +35,17 @@ export default function Home() {
     router.replace("/login/login");
   }
 
-  function goToNewEvent(){
-    router.replace("/new-event")
+  function goToProfile(){
+    router.replace("/profile")
   }
 
   return (
     <View className={'p-8 gap-8'} >
       <View className={'flex-row justify-between item-center'}>
         <Text className={'text-xl font-semibold mt-4 mb-4'}>My Events</Text>
-        <Button title={'New Event'} onPress={handleSignOut} ></Button>
+        <Button title={'My Account'} onPress={goToProfile} ></Button> 
       </View>
-      {events.map((event_, index) => (
+      {events.length > 0 ? (events.map((event_, index) => (
         <EventCard
           key={index}
           eventId={event_.id}
@@ -53,7 +55,13 @@ export default function Home() {
           currentParticipants={event_.current_participants}
           maxParticipants={event_.max_participants}
         />
-      ))}
+      ))): (
+        <View className={'h-5/6 items-center align-center justify-center'}>
+          <Text className={'text-gray-600'}>No Events Found.</Text>
+          <Link className={'underline text-gray-600'} href={"/new-event"}>Create New Event</Link>
+        </View>
+      )
+    }
     </View>
   );
 }

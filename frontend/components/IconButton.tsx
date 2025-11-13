@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Pressable, View, Text, GestureResponderEvent } from "react-native";
+import { Pressable, View, GestureResponderEvent } from "react-native";
 
 type IconButtonProps = {
   iconName: string,
@@ -9,11 +9,11 @@ type IconButtonProps = {
 };
 
 export default function IconButton({
-  iconName, onPressExec, iconColor="black", iconSize = 16
+  iconName, onPressExec, iconColor="#000", iconSize = 16
 }: IconButtonProps) {
 
   if(iconColor == ""){
-    iconColor = "black";
+    iconColor = "#000";
   }
 
   return (

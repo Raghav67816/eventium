@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Participant } from '@/components/ParticipantCard';
 
-const url = "https://cbe365c0cdda.ngrok-free.app"
+const url = "https://c7f274c19b0e.ngrok-free.app"
 
 export type Org = {
     name: string,
@@ -81,4 +81,20 @@ export async function getParticipants(eventId: string): Promise<Array<Participan
 
     console.log(participants);
     return participants;
+}
+
+// send invite to org
+export async function inviteOrg(email: string, role: string){
+    const response = await fetch(`${url}/events/invite-org`, {
+        headers: {"Content-Type": "application/json"},
+        method: "POST",
+        body: JSON.stringify({
+            "email": email,
+            "role": role
+        })
+    })
+
+    if(response.ok){
+        console.log("invite sent");
+    }
 }

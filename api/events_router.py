@@ -48,26 +48,37 @@ async def general_query(request: Request):
         raise HTTPException(400, detail="not a valid field")
     
 
-@events_router.post("/add-org")
-# async def add_org(request: Request):
-def add_org(event_id: str, org_id: str):
-    # data = await request.json()
-    # if not data['event-name'] and not data['org-id']:
-    if not event_id and not org_id:
-        raise HTTPException(status_code=403, detail="provide all details")
+# @events_router.post("/add-org")
+# # async def add_org(request: Request):
+# def add_org(event_id: str, org_id: str):
+#     # data = await request.json()
+#     # if not data['event-name'] and not data['org-id']:
+#     if not event_id and not org_id:
+#         raise HTTPException(status_code=403, detail="provide all details")
     
+#     else:
+#         # org = s_client.table("users").select("email").eq("id", data['org-id']).execute()
+#         org = s_client.table("users").select("id").eq("email", org_id).execute()
+#         if org:
+#             event = s_client.table("events").select("organisers").eq("id", event_id).execute()
+#             if event:
+#                 orgs = event.data
+#                 orgs.append(org_id)
+#                 s_client.table("events").update({"organisers": orgs}).eq("id", event_id).execute()
+#                 return JSONResponse(
+#                     status_code=200,
+#                     content={
+#                         "msg": "success"
+#                     }
+#                 )
+
+@events_router.post("/invite-org")
+async def invite_org(request: Request):
+    data = await request.json()
+    if data:
+        s_client.auth.admin.invite_user_by_email(data['email'], options={
+            "redirect_to": "https://google.com"
+        })
     else:
-        # org = s_client.table("users").select("email").eq("id", data['org-id']).execute()
-        org = s_client.table("users").select("id").eq("email", org_id).execute()
-        if org:
-            event = s_client.table("events").select("organisers").eq("id", event_id).execute()
-            if event:
-                orgs = event.data
-                orgs.append(org_id)
-                s_client.table("events").update({"organisers": orgs}).eq("id", event_id).execute()
-                return JSONResponse(
-                    status_code=200,
-                    content={
-                        "msg": "success"
-                    }
-                )
+        raise HTTPException(status_code=403, detail="provide email")
+
