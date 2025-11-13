@@ -5,7 +5,7 @@ const endpoint = "https://a32bff925eb0.ngrok-free.app"
 // Get logged in user
 export async function getUser() {
     let result = await SecureStore.getItemAsync("access_token");
-    SecureStore.deleteItemAsync("access_token"); // for temp use only
+    // SecureStore.deleteItemAsync("access_token"); // for temp use only
     if (result){
         return result;
     }
