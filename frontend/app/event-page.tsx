@@ -101,6 +101,7 @@ export default function EventPage() {
                         </View>
                         <View>
                             <View className={"mb-8"}>
+                                <Text>Work in Progress. Workflow broken due to db restructure</Text>
                                 <ScrollView className={"mt-8 mb-8"}>
                                     {orgs.map((org, index) => (
                                         <OrgCard key={index} name={org.name} email={org.email}></OrgCard>
