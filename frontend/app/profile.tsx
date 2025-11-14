@@ -2,6 +2,7 @@ import { View, Text } from "react-native"
 import { Button } from "@/components/Button";
 import * as SecureStore from 'expo-secure-store';
 import { useRouter } from "expo-router";
+import IconButton from "@/components/IconButton";
 
 export default function Profile(){
 
@@ -21,9 +22,11 @@ export default function Profile(){
     return (
         <View className={"p-8"}>
             <View className={"flex-row items-center justify-between"}>
-                <Text>Profile</Text>
+                <View className={"flex-row items-center gap-4"}>
+                    <IconButton iconName={"close"} iconColor="black" iconSize={16} onPressExec={goToEvents} ></IconButton>
+                    <Text className={"text-lg font-semibold"}>Profile</Text>
+                </View>
                 <Button title={"Sign Out"} onPress={handleSignOut}></Button>
-                <Button title={"Go Back"} onPress={goToEvents}></Button>
             </View>
         </View>
     )

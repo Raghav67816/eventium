@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Pressable, View, GestureResponderEvent } from "react-native";
+import { Pressable, View, GestureResponderEvent, TouchableOpacity } from "react-native";
 
 type IconButtonProps = {
   iconName: string,
@@ -9,18 +9,15 @@ type IconButtonProps = {
 };
 
 export default function IconButton({
-  iconName, onPressExec, iconColor="#000", iconSize = 16
+  iconName, onPressExec, iconSize = 16, iconColor
 }: IconButtonProps) {
 
-  if(iconColor == ""){
-    iconColor = "#000";
-  }
 
   return (
-    <View>
-        <Pressable onPress={onPressExec}>
-            <Ionicons size={iconSize} id={iconName} color={iconColor}></Ionicons>
-        </Pressable>
-    </View>
+    <TouchableOpacity onPress={onPressExec}>
+      <View>
+          <Ionicons name={iconName} size={iconSize} color={iconColor} ></Ionicons>
+      </View>
+    </TouchableOpacity>
   );
 }

@@ -33,7 +33,7 @@ export default function EventCard({
     const router = useRouter();
 
   return (
-    <View className={'shadow rounded rounded p-8'}>
+    <View className={'shadow rounded-md p-8'}>
       <Pressable onPress={onPress__}>
         <Text className={"font-bold text-2xl"}>{event_name}</Text>
         <View className={'mt-8 gap-2'}>

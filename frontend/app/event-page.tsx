@@ -174,6 +174,7 @@ export default function EventPage() {
                         <View className="flex-1">
                             <ParticipantCard
                                 id={item.id}
+                                name={item.name}
                                 age={item.age}
                                 phone={item.phone}
                                 email={item.email}

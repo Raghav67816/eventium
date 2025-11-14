@@ -21,9 +21,6 @@ export default function ParticipantCard({ id, name, email, phone, age }: Partici
       <View>
         <View className={"flex-row justify-between"}>
           <Text className="font-semibold text-lg text-white">{name}</Text>
-          <IconButton iconColor={"red"} iconName={"trash-bin"} iconSize={24} onPressExec={() => {
-            console.log("ok");
-          }} ></IconButton>
         </View>
         <Text className="font-light text-sm text-white mt-1">{age} yrs</Text>
       </View>
