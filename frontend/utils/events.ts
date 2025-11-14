@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Participant } from '@/components/ParticipantCard';
 
-const url = "https://ed4dc268c69a.ngrok-free.app"
+const url = "https://eventium-api.onrender.com"
 
 export type Org = {
     name: string,
@@ -79,6 +79,7 @@ export async function getParticipants(eventId: string): Promise<Array<Participan
         participants = data_.participants;
     }
 
+    console.log("participants");
     console.log(participants);
     return participants;
 }

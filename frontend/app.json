@@ -40,6 +40,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.cooper.eventium"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "cf169aad-d58a-4071-b311-65cddc734937"
       }
     }
   }

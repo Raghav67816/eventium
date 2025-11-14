@@ -68,8 +68,8 @@ export default function EventPage() {
 
     useEffect(() => {
         const fetchOrgs = async () => {
-            const orgs = await addOrgsToView(eventId.toString());
-            setOrgs(orgs);
+            // const orgs = await addOrgsToView(eventId.toString());
+            // setOrgs(orgs);
         }
 
         const fetchParticipants = async () => {
