@@ -4,12 +4,15 @@ import IconButton from "./IconButton";
 
 export type Participant = {
     id: string,
+    name: string,
     email: string,
     phone: string,
     age: string
 }
 
-export default function ParticipantCard({ id, email, phone, age }: Participant) {
+export default function ParticipantCard({ id, name, email, phone, age }: Participant) {
+  const pid = id;
+
   function onRemovePressed(){
   }
 
@@ -17,7 +20,7 @@ export default function ParticipantCard({ id, email, phone, age }: Participant) 
     <View className="bg-blue-600 rounded-2xl p-4 w-full min-h-[140px] max-h-[140px] justify-between">
       <View>
         <View className={"flex-row justify-between"}>
-          <Text className="font-semibold text-lg text-white">{id}</Text>
+          <Text className="font-semibold text-lg text-white">{name}</Text>
           <IconButton iconColor={"red"} iconName={"trash-bin"} iconSize={24} onPressExec={() => {
             console.log("ok");
           }} ></IconButton>

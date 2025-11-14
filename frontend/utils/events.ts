@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Participant } from '@/components/ParticipantCard';
 
-const url = "https://2f161a260719.ngrok-free.app"
+const url = "https://8310b8ba2ac4.ngrok-free.app"
 
 export type Org = {
     name: string,
@@ -28,6 +28,7 @@ export async function getEvents(){
 
     if (response.ok){
         const res = await response.json();
+        console.log("events");
         console.log(res['events']);
         events = res['events']
     }
@@ -44,7 +45,7 @@ export async function addOrgsToView(eventId: string): Promise<Array<Org>>{
         `${url}/event/query/general`,
         {
             body: JSON.stringify({
-                'field': 'organisers',
+                'field': 'organisers_id',
                 'id': eventId
             }),
             method: "POST"
@@ -65,18 +66,17 @@ export async function addOrgsToView(eventId: string): Promise<Array<Org>>{
 export async function getParticipants(eventId: string): Promise<Array<Participant>>{
     let participants = []
     const response = await fetch(
-        `${url}/event/query/general`, {
+        `${url}/event/participants`, {
             method: "POST",
             body: JSON.stringify({
-                "id": eventId,
-                "field": "participants"
+                "event_id": eventId,
             })
         }
     )
 
     if (response.ok){
         const data_ = await response.json();
-        participants = data_.data.participants;
+        participants = data_.participants;
     }
 
     console.log(participants);

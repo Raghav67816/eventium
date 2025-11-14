@@ -22,8 +22,8 @@ export default function Profile(){
         <View className={"p-8"}>
             <View className={"flex-row items-center justify-between"}>
                 <Text>Profile</Text>
-                {/* <Button title={"Sign Out"} onPress={handleSignOut}></Button> */}
-                <Button title={"Sign Out"} onPress={goToEvents}></Button>
+                <Button title={"Sign Out"} onPress={handleSignOut}></Button>
+                <Button title={"Go Back"} onPress={goToEvents}></Button>
             </View>
         </View>
     )

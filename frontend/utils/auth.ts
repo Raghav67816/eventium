@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-const endpoint = "https://2f161a260719.ngrok-free.app"
+const endpoint = "https://8310b8ba2ac4.ngrok-free.app"
 
 // Get logged in user
 export async function getUser() {
