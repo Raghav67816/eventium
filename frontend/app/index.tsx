@@ -62,6 +62,9 @@ export default function Home() {
         </View>
       )
     }
+    <View className='flex-row items-center justify-center'>
+      <Link className={'underline text-gray-600'} href={"/new-event"}>Create New Event</Link>
+    </View>
     </View>
   );
 }
