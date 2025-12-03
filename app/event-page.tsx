@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo} from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCameraPermissions, CameraView } from "expo-camera";
 import { View, Text, Modal, ScrollView, FlatList, StyleSheet } from "react-native"
-import { Menu, Searchbar, TextInput, PaperProvider, Appbar, Button } from "react-native-paper";
+import { Menu, Searchbar, TextInput, PaperProvider, Appbar, Button, IconButton } from "react-native-paper";
 
 
 import { Org } from "@/utils/events";
@@ -106,7 +106,7 @@ export default function EventPage() {
                     <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Organisers</Text>
-                            {/* <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleOrgModal} iconColor={""} ></IconButton> */}
+                            <IconButton onPress={toggleOrgModal} icon={"close"} />
                         </View>
                         <View>
                             <View className={"mb-8"}>
@@ -117,8 +117,11 @@ export default function EventPage() {
                                     ))}
                                 </ScrollView>
                                 <View className={"flex-row flex justify-between items-center"}>
-                                    <TextInput className={" w-[75%] bg-gray-200 rounded px-4"} placeholder="Email"></TextInput>
-                                    <Button className={"w-[20%]"}>Add</Button>
+                                    <TextInput
+                                     mode={'outlined'}
+                                     style={{width: "75%"}} 
+                                     placeholder="Email" />
+                                    <Button mode={'contained'} icon={"plus"}>Add</Button>
                                 </View>
                             </View>
                         </View>
@@ -134,7 +137,7 @@ export default function EventPage() {
                     <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Scan Qr Code</Text>
-                            {/* <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleQrModal} iconColor={""} ></IconButton> */}
+                            <IconButton onPress={toggleQrModal} icon={"close"} />
                         </View>
                         <View>
                             <View className={"mb-8"}>
@@ -151,8 +154,8 @@ export default function EventPage() {
             <Appbar mode={'small'}>
                 <Appbar.BackAction onPress={toHome} />
                 <Appbar.Content title={eventName.toString()} titleStyle={{ fontSize: 18 }} />
-                <Appbar.Action icon={'account-group'}></Appbar.Action>
-                <Appbar.Action icon={'qrcode-scan'}></Appbar.Action>
+                <Appbar.Action icon={'account-group'} onPress={toggleOrgModal}></Appbar.Action>
+                <Appbar.Action icon={'qrcode-scan'} onPress={toggleQrModal}></Appbar.Action>
             </Appbar>
 
             <View className="mt-8 px-8">

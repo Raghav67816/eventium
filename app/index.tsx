@@ -2,7 +2,6 @@ import EventCard from '@/components/EventCard';
 import { useRouter } from 'expo-router';
 import { getUser } from '@/utils/auth';
 import { View, Text } from 'react-native';
-import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { signOut } from '@/utils/auth';
 import { getEvents } from '@/utils/events';

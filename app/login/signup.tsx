@@ -3,7 +3,7 @@ import { signUp } from '@/utils/auth';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View, ToastAndroid, Text} from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { TextInput, HelperText } from 'react-native-paper';
 
 export default function SignUp() {
     const router = useRouter();
@@ -26,6 +26,17 @@ export default function SignUp() {
         }
     }
 
+    const hasErrors = () => {
+        let error = false;
+        if (password.length < 6){
+            error = true;
+        }
+        else{
+            error = false;
+        }
+        return error
+    }
+
     const showToast = (message: string) =>{
         ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.CENTER);
     }
@@ -36,12 +47,13 @@ export default function SignUp() {
             <View className={'flex-1 justify-center gap-4'}>
                 <Text className={'text-3xl font-semibold'}>Sign Up</Text>
                 <View className={'gap-4'}>
-                    <TextInput
+                        <TextInput
                         mode={'outlined'}
                         value={name}
                         onChangeText={setName}
                         left={<TextInput.Icon icon={"text"} />}
                         placeholder='Your Full Name' />
+                        
                     <TextInput
                         mode={'outlined'}
                         value={email}
@@ -65,6 +77,9 @@ export default function SignUp() {
                         left={<TextInput.Icon icon={"lock"} />}
                         placeholder='Your Password'
                         textContentType={'password'} />
+                        <HelperText type={'error'} visible={hasErrors()}>
+                            Password length must be greater than 6.
+                        </HelperText>
                 </View>
                 <View className={'gap-6 items-center'}>
                     <Button onPress={handleSignup} className={'w-1/2 h-[40]'} mode={'contained'}>Submit</Button>

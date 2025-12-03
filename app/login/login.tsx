@@ -1,5 +1,5 @@
 import { requestMagicLink } from '@/utils/auth';
-import { Link, router, useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View, Text } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
