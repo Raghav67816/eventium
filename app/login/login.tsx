@@ -1,8 +1,8 @@
-import { Button } from '@/components/Button';
 import { requestMagicLink } from '@/utils/auth';
 import { Link, router, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text } from 'react-native';
+import { TextInput, Button } from 'react-native-paper';
 
 export default function Login() {
   const router = useRouter();
@@ -29,17 +29,18 @@ export default function Login() {
   return (
     <View className={'flex-1 p-16 '}>
       <Text className={'font-bold text-xl'}>Eventium</Text>
-      <View className={'flex-1 justify-center'}>
-        <Text className={'text-3xl font-semibold mt-20'}>Log In</Text>
+      <View className={'flex-1 justify-center gap-16'}>
+        <Text className={'text-3xl font-semibold'}>Log In</Text>
         <TextInput 
+          mode={'outlined'}
           value={email} 
           onChangeText={setEmail} 
-          className={'border-b mt-8'} 
-          placeholder='Your Email' 
+          label={"Email"}
+          left={<TextInput.Icon icon={"email"}></TextInput.Icon>}
           textContentType={'emailAddress'} />
-        <Text className={'mt-5'}>We will send you a magic link. Check your email</Text>
+        <Text>We will send you a magic link. Check your email</Text>
         <View className={'gap-6 items-center'}>
-          <Button title={'Submit'} className='mt-20 w-1/2 bg-black' onPress={sendRequest} />
+          <Button mode={'contained'} className='w-1/2 h-[40]' onPress={sendRequest}>Submit</Button>
           <Link href={"/login/signup"} className={'text-md underline'}>Create New Account</Link>
         </View>
       </View>

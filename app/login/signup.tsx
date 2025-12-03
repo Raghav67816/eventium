@@ -1,8 +1,9 @@
-import { Button } from '@/components/Button';
+import { Button } from 'react-native-paper';
 import { signUp } from '@/utils/auth';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View, ToastAndroid, Text, TextInput } from 'react-native';
+import { View, ToastAndroid, Text} from 'react-native';
+import { TextInput } from 'react-native-paper';
 
 export default function SignUp() {
     const router = useRouter();
@@ -32,37 +33,42 @@ export default function SignUp() {
     return (
         <View className={'flex-1 p-16 '}>
             <Text className={'font-bold text-xl'}>Eventium</Text>
-            <View className={'flex-1 justify-center'}>
-                <Text className={'text-3xl font-semibold mt-20'}>Sign Up</Text>
-                <View className={'gap-4 mt-8'}>
+            <View className={'flex-1 justify-center gap-4'}>
+                <Text className={'text-3xl font-semibold'}>Sign Up</Text>
+                <View className={'gap-4'}>
                     <TextInput
+                        mode={'outlined'}
                         value={name}
                         onChangeText={setName}
-                        className={'bg-gray-200 rounded px-4'}
+                        left={<TextInput.Icon icon={"text"} />}
                         placeholder='Your Full Name' />
                     <TextInput
+                        mode={'outlined'}
                         value={email}
                         onChangeText={setEmail}
-                        className={'bg-gray-200 rounded px-4'}
+                        left={<TextInput.Icon icon={"email"} />}
                         placeholder='Your Email'
                         textContentType={'emailAddress'} />
                     <TextInput
+                        mode={'outlined'}
                         value={phone}
                         onChangeText={setPhone}
-                        className={'bg-gray-200 rounded px-4'}
+                        left={<TextInput.Icon icon={"phone"} />}
                         placeholder='Your Phone Number'
                         textContentType={'telephoneNumber'} />
 
                     <TextInput
+                        mode={'outlined'}
                         value={password}
+                        secureTextEntry
                         onChangeText={setPassword}
-                        className={'bg-gray-200 rounded px-4'}
+                        left={<TextInput.Icon icon={"lock"} />}
                         placeholder='Your Password'
                         textContentType={'password'} />
                 </View>
                 <View className={'gap-6 items-center'}>
-                    <Button title={'Submit'} onPress={handleSignup} className='mt-20 w-1/2 bg-black' />
-                    <Link href={"/login/signup"} className={'text-md underline'}>Create New Account</Link>
+                    <Button onPress={handleSignup} className={'w-1/2 h-[40]'} mode={'contained'}>Submit</Button>
+                    <Link href={"/login/login"} className={'text-md underline'}>Already Have An Account ?</Link>
                 </View>
             </View>
         </View>

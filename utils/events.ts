@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Participant } from '@/components/ParticipantCard';
 
-const url = "https://eventium-api.onrender.com"
+const url = "https://d9ea8563eb21.ngrok-free.app"
 
 export type Org = {
     name: string,

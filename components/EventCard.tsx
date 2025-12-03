@@ -1,6 +1,7 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { View, Text, Pressable } from "react-native";
+import { Card, Text, Icon } from 'react-native-paper';
+import { View } from 'react-native';
 
 type EventCardProps = {
   event_name: string;
@@ -20,44 +21,47 @@ export default function EventCard({
   currentParticipants,
 }: EventCardProps) {
 
-    function onPress__(){
-        router.replace({
-            pathname: "/event-page",
-            params: {
-                eventName: event_name,
-                eventId: eventId
-            }
-        })
-    }
+  function onPress__() {
+    router.replace({
+      pathname: "/event-page",
+      params: {
+        eventName: event_name,
+        eventId: eventId
+      }
+    })
+  }
 
-    const router = useRouter();
+  const router = useRouter();
 
   return (
-    <View className={'shadow rounded-md p-8'}>
-      <Pressable onPress={onPress__}>
-        <Text className={"font-bold text-2xl"}>{event_name}</Text>
-        <View className={'mt-8 gap-2'}>
-            <View className={'gap-2 flex-row items-center'}>
-                <Ionicons name={'location-outline'} color={'grey'} size={18}></Ionicons>
-                <Text className={'text-lg text-gray'}>
-                    {place}
-                </Text>
-            </View>
-            
-            <View className={'gap-2 flex-row items-center'}>
-                <Ionicons name={'people'} color={'grey'} size={18}></Ionicons>
-                <Text className={'text-lg text-gray'}>
-                    {currentParticipants} of {maxParticipants}
-                </Text>
-            </View>
-            <View className={'gap-2 flex-row items-center'}>
-                <Ionicons name={'business'} color={'grey'} size={18}></Ionicons>
-                <Text className={'text-lg text-gray'}>
-                    {venue}
-                </Text>
-            </View>
+    <Card className={'w-1/2'}>
+      <Card.Title title={event_name} titleVariant={'bodyLarge'} />
+      <Card.Content className={'gap-2'}>
+        <View className={'gap-2 flex-row items-center'}>
+          <Icon source={"earth"} size={20} />
+          <Text className={'text-lg text-gray'}>
+            {place}
+          </Text>
         </View>
-      </Pressable>
-    </View>
-  );
+
+        <View className={'gap-2 flex-row items-center'}>
+          <Icon source={"account-multiple"} size={20} />
+          <Text className={'text-lg text-gray'}>
+            {currentParticipants} of {maxParticipants}
+          </Text>
+        </View>
+
+
+        <View className={'gap-2 flex-row items-center'}>
+          <Icon source={"map-marker"} size={20} />
+          <Text className={'text-lg text-gray'}>
+            {venue}
+          </Text>
+        </View>
+      </Card.Content>
+      <Card.Actions>
+          <Button mode={'contained'} onPress={onPress__}>Manage</Button>
+      </Card.Actions>
+    </Card>
+  )
 }

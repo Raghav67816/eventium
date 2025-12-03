@@ -6,7 +6,7 @@ import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { signOut } from '@/utils/auth';
 import { getEvents } from '@/utils/events';
-import { Button } from '@/components/Button';
+import { Appbar, FAB } from "react-native-paper"
 
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
       }
       else {
         const events = await getEvents();
-        if(events == null){
+        if (events == null) {
           return;
         }
         setEvents(await getEvents());
@@ -35,36 +35,50 @@ export default function Home() {
     router.replace("/login/login");
   }
 
-  function goToProfile(){
-    router.replace("/profile")
+  function goToProfile() {
+    router.replace("/profile");
+  }
+
+  function goToNewEvents() {
+    router.replace("/new-event");
   }
 
   return (
-    <View className={'p-8 gap-8'} >
-      <View className={'flex-row justify-between item-center'}>
-        <Text className={'text-xl font-semibold mt-4 mb-4'}>My Events</Text>
-        <Button title={'My Account'} onPress={goToProfile} ></Button> 
+    <View>
+      <Appbar mode={'small'} >
+        <Appbar.Content title={"My Events"} titleStyle={{ fontSize: 18 }} />
+        <Appbar.Action icon={'account'} onPress={goToProfile} />
+      </Appbar>
+      <View className={'p-8'}>
+        {events.length > 0 ? (events.map((event_, index) => (
+          <EventCard
+            key={index}
+            eventId={event_.id}
+            event_name={event_.name}
+            place={event_.country_city}
+            venue={event_.venue}
+            currentParticipants={event_.current_participants}
+            maxParticipants={event_.max_participants}
+          />
+        ))) : (
+          <View>
+            <View className={'h-5/6 items-center align-center justify-center'}>
+              <Text className={'text-gray-600'}>No Events Found.</Text>
+            </View>
+            <FAB
+              onPress={goToNewEvents}
+              icon={'plus'}
+              style={{
+                position: 'absolute',
+                margin: 16,
+                right: 0,
+                bottom: 0
+              }}
+            />
+          </View>
+        )
+        }
       </View>
-      {events.length > 0 ? (events.map((event_, index) => (
-        <EventCard
-          key={index}
-          eventId={event_.id}
-          event_name={event_.name}
-          place={event_.country_city}
-          venue={event_.venue}
-          currentParticipants={event_.current_participants}
-          maxParticipants={event_.max_participants}
-        />
-      ))): (
-        <View className={'h-5/6 items-center align-center justify-center'}>
-          <Text className={'text-gray-600'}>No Events Found.</Text>
-          <Link className={'underline text-gray-600'} href={"/new-event"}>Create New Event</Link>
-        </View>
-      )
-    }
-    <View className='flex-row items-center justify-center'>
-      <Link className={'underline text-gray-600'} href={"/new-event"}>Create New Event</Link>
-    </View>
     </View>
   );
 }
