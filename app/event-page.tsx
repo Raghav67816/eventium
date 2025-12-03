@@ -1,19 +1,20 @@
 import Fuse from "fuse.js";
-import { Org } from "@/utils/events";
-import OrgCard from "@/components/OrgCard";
-import { Button } from "@/components/Button";
-import { addOrgsToView } from "@/utils/events";
-import { useCameraPermissions, CameraView } from "expo-camera";
-import { getParticipants } from "@/utils/events";
-import IconButton from "@/components/IconButton";
-import { useEffect, useState, useMemo, useCallback } from "react";
-import { Picker } from "@react-native-picker/picker";
+
+import { useEffect, useState, useMemo} from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useCameraPermissions, CameraView } from "expo-camera";
+import { View, Text, Modal, ScrollView, FlatList, StyleSheet } from "react-native"
+import { Menu, Searchbar, TextInput, PaperProvider, Appbar, Button } from "react-native-paper";
+
+
+import { Org } from "@/utils/events";
+import { getParticipants } from "@/utils/events";
+import OrgCard from "@/components/OrgCard";
 import ParticipantCard, { Participant } from "@/components/ParticipantCard";
-import { View, Text, Modal, ScrollView, TextInput, FlatList, StyleSheet } from "react-native"
 
 export default function EventPage() {
     const router = useRouter();
+    const [menuVisible, setMenuVisible] = useState(false);
     const { eventName, eventId } = useLocalSearchParams();
     const [perm, requestPerm] = useCameraPermissions();
     const [isOrgModalVisible, setOrgModalVisible] = useState(false);
@@ -22,6 +23,14 @@ export default function EventPage() {
     const [orgs, setOrgs] = useState<Org[]>([]);
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [filteredContent, setFilteredContent] = useState<Participant[]>([]);
+
+    function openDropdown() {
+        setMenuVisible(true);
+    }
+
+    function closeDropdown() {
+        setMenuVisible(false);
+    }
 
     if (!perm?.granted) {
         console.log("not granted");
@@ -82,12 +91,12 @@ export default function EventPage() {
         fetchParticipants();
     }, [])
 
-    function onBarcodeScanned(){
+    function onBarcodeScanned() {
         console.log("Oh yess");
     }
 
     return (
-        <View className={'p-8'}>
+        <View>
             <Modal
                 visible={isOrgModalVisible}
                 animationType="slide"
@@ -97,7 +106,7 @@ export default function EventPage() {
                     <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Organisers</Text>
-                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleOrgModal} iconColor={""} ></IconButton>
+                            {/* <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleOrgModal} iconColor={""} ></IconButton> */}
                         </View>
                         <View>
                             <View className={"mb-8"}>
@@ -109,7 +118,7 @@ export default function EventPage() {
                                 </ScrollView>
                                 <View className={"flex-row flex justify-between items-center"}>
                                     <TextInput className={" w-[75%] bg-gray-200 rounded px-4"} placeholder="Email"></TextInput>
-                                    <Button className={"w-[20%]"} title={"Add"}></Button>
+                                    <Button className={"w-[20%]"}>Add</Button>
                                 </View>
                             </View>
                         </View>
@@ -125,7 +134,7 @@ export default function EventPage() {
                     <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Scan Qr Code</Text>
-                            <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleQrModal} iconColor={""} ></IconButton>
+                            {/* <IconButton iconName="close-outline" iconSize={18} onPressExec={toggleQrModal} iconColor={""} ></IconButton> */}
                         </View>
                         <View>
                             <View className={"mb-8"}>
@@ -138,33 +147,37 @@ export default function EventPage() {
                     </View>
                 </View>
             </Modal>
-            <View className={"flex-row justify-between py-4"}>
-                <View className={"flex-row gap-4 items-center"}>
-                    <IconButton iconName={"arrow-back"} iconSize={18} onPressExec={toHome} iconColor={""} />
-                    <Text className={"font-semibold text-xl"}>{eventName}</Text>
-                </View>
-                <View className={"flex-row gap-4 self-right"}>
-                    <IconButton iconName={"people"} iconSize={24} onPressExec={toggleOrgModal} iconColor={""} />
-                    <IconButton iconName={"settings"} iconSize={24} onPressExec={toggleOrgModal} iconColor={""} />
-                    <IconButton iconName={"qr-code-sharp"} iconSize={24} onPressExec={toggleQrModal} iconColor={""} />
-                </View>
-            </View>
-            <View className="mt-8 px-4">
-                <View className={"flex-row justify-between mb-8"}>
-                    <TextInput
+
+            <Appbar mode={'small'}>
+                <Appbar.BackAction onPress={toHome} />
+                <Appbar.Content title={eventName.toString()} titleStyle={{ fontSize: 18 }} />
+                <Appbar.Action icon={'account-group'}></Appbar.Action>
+                <Appbar.Action icon={'qrcode-scan'}></Appbar.Action>
+            </Appbar>
+
+            <View className="mt-8 px-8">
+                <View className={"flex-row justify-between align-center mb-8"}>
+                    <Searchbar
+                        mode={'bar'}
+                        style={{ width: '75%', backgroundColor: "#dddddd" }}
                         onChangeText={onTextChange}
-                        style={{ width: '75%' }}
-                        className={"bg-gray-200 rounded px-4"}
-                        placeholder={"Type Something..."}
+                        placeholder={"Search"}
                         value={input}
-                    >
-                    </TextInput>
-                    <Picker prompt={"Filter"} style={{ width: '20%' }} mode={'dropdown'} enabled={true} >
-                        <Picker.Item label={"Name"} value={"name"} />
-                        <Picker.Item label={"Email"} value={"email"} />
-                        <Picker.Item label={"Phone Number"} value={"phone"} />
-                        <Picker.Item label={"Age"} value={"age"} />
-                    </Picker>
+                    />
+                    <View>
+                        <PaperProvider>
+                            <View>
+                                <Menu
+                                    visible={menuVisible} onDismiss={closeDropdown}
+                                    anchor={<Button icon={"filter"} mode={'outlined'} onPress={openDropdown}>Filter</Button>}>
+                                    <Menu.Item title={"Name"} />
+                                    <Menu.Item title={"Email"} />
+                                    <Menu.Item title={"Age"} />
+                                    <Menu.Item title={"Phone Number"} />
+                                </Menu>
+                            </View>
+                        </PaperProvider>
+                    </View>
                 </View>
                 <FlatList
                     data={filteredContent}
