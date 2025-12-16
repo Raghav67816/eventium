@@ -1,10 +1,10 @@
-import EventCard from '@/components/EventCard';
-import { useRouter } from 'expo-router';
 import { getUser } from '@/utils/auth';
+import { useRouter } from 'expo-router';
 import { View, Text } from 'react-native';
-import { useEffect, useState } from 'react';
-import { signOut } from '@/utils/auth';
 import { getEvents } from '@/utils/events';
+import { useEffect, useState } from 'react';
+import EventCard from '@/components/EventCard';
+import { MD3Colors } from 'react-native-paper';
 import { Appbar, FAB } from "react-native-paper"
 
 
@@ -29,11 +29,6 @@ export default function Home() {
     checkUser();
   }, [])
 
-  async function handleSignOut() {
-    signOut();
-    router.replace("/login/login");
-  }
-
   function goToProfile() {
     router.replace("/profile");
   }
@@ -43,7 +38,7 @@ export default function Home() {
   }
 
   return (
-    <View>
+    <View style={{backgroundColor: `${MD3Colors.primary0}`}} className={'flex-1'}>
       <Appbar mode={'small'} >
         <Appbar.Content title={"My Events"} titleStyle={{ fontSize: 18 }} />
         <Appbar.Action icon={'account'} onPress={goToProfile} />

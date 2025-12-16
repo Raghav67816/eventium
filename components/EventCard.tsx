@@ -1,7 +1,7 @@
-import { Button } from 'react-native-paper';
-import { useRouter } from 'expo-router';
-import { Card, Text, Icon } from 'react-native-paper';
 import { View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Text, Icon } from 'react-native-paper';
+import { Button, Surface } from 'react-native-paper';
 
 type EventCardProps = {
   event_name: string;
@@ -34,9 +34,13 @@ export default function EventCard({
   const router = useRouter();
 
   return (
-    <Card className={'w-1/2'}>
-      <Card.Title title={event_name} titleVariant={'bodyLarge'} />
-      <Card.Content className={'gap-2'}>
+    <Surface elevation={2} className={'w-1/2'} style={{borderRadius: 5}}>
+      <View className="p-4 items-center">
+        <Text className="text-2xl text-center">
+          {event_name.toUpperCase()}
+        </Text>
+      </View>
+      <View className={'p-4 gap-2'}>
         <View className={'gap-2 flex-row items-center'}>
           <Icon source={"earth"} size={20} />
           <Text className={'text-lg text-gray'}>
@@ -58,10 +62,8 @@ export default function EventCard({
             {venue}
           </Text>
         </View>
-      </Card.Content>
-      <Card.Actions>
-          <Button mode={'contained'} onPress={onPress__}>Manage</Button>
-      </Card.Actions>
-    </Card>
+        <Button onPress={onPress__} mode={'contained'}>Manage</Button>
+      </View>
+    </Surface>
   )
 }

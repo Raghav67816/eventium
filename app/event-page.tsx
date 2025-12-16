@@ -1,9 +1,10 @@
 import Fuse from "fuse.js";
 
+import { MD3Colors, Text } from "react-native-paper";
 import { useEffect, useState, useMemo} from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCameraPermissions, CameraView } from "expo-camera";
-import { View, Text, Modal, ScrollView, FlatList, StyleSheet } from "react-native"
+import { View, Modal, ScrollView, FlatList, StyleSheet } from "react-native"
 import { Menu, Searchbar, TextInput, PaperProvider, Appbar, Button, IconButton } from "react-native-paper";
 
 
@@ -96,14 +97,14 @@ export default function EventPage() {
     }
 
     return (
-        <View>
+        <View style={{backgroundColor: `${MD3Colors.primary0}`}}>
             <Modal
                 visible={isOrgModalVisible}
                 animationType="slide"
                 transparent={true}
             >
                 <View className="flex-1 justify-center items-center bg-black/50">
-                    <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
+                    <View className="w-5/6 h-auto rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Organisers</Text>
                             <IconButton onPress={toggleOrgModal} icon={"close"} />
@@ -133,8 +134,8 @@ export default function EventPage() {
                 animationType="slide"
                 transparent={true}
             >
-                <View className="flex-1 justify-center items-center bg-black/50">
-                    <View className="w-5/6 h-auto bg-white rounded-xl p-6 shadow-2xl">
+                <View style={{backgroundColor: `${MD3Colors.primary0}`}} className="flex-1 justify-center items-center bg-black/50">
+                    <View className="w-5/6 h-auto rounded-xl p-6 shadow-2xl">
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Scan Qr Code</Text>
                             <IconButton onPress={toggleQrModal} icon={"close"} />

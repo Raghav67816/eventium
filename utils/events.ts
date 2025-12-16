@@ -1,39 +1,50 @@
+import { API_URL } from './constants';
+import { ToastAndroid } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { Participant } from '@/components/ParticipantCard';
-
-const url = "https://d9ea8563eb21.ngrok-free.app"
 
 export type Org = {
     name: string,
     email: string,
 };
 
-// Get events
+/*
+getEvents
+
+get events from the db
+ */
 export async function getEvents(){
-    let events = null;
+    let events = [];
     const email = await SecureStore.getItemAsync("email");
     const token = await SecureStore.getItemAsync("access_token");
-    const response = await fetch(
-        `${url}/event/my-events`,
-        {
-            headers: {"Authorization": `Bearer ${token}`, 
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify({email}),
-            method: "POST"
+
+    try{
+        const response = await fetch(
+            `${API_URL}/event/my-events`,
+            {
+                headers: {"Authorization": `Bearer ${token}`, 
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify({email}),
+                method: "POST"
+            }
+        )
+
+        if (response.ok){
+            const res = await response.json();
+            console.log("events");
+            console.log(res['events']);
+            events = res['events'];
+
+            console.debug(`type of events: ${typeof(events)}`);
         }
-    )
-
-    console.log(email);
-
-    if (response.ok){
-        const res = await response.json();
-        console.log("events");
-        console.log(res['events']);
-        events = res['events']
     }
 
-    console.log(events)
+    catch(e){
+        console.error(`Failed to fetch events: ${e}`);
+        ToastAndroid.show("Failed to fetch events. Please try again.", ToastAndroid.SHORT);
+        events = [];
+    }
 
     return events;
 }
@@ -42,7 +53,7 @@ export async function getEvents(){
 export async function addOrgsToView(eventId: string): Promise<Array<Org>>{
     let orgs = [];
     const response = await fetch(
-        `${url}/event/query/general`,
+        `${API_URL}/event/query/general`,
         {
             body: JSON.stringify({
                 'field': 'organisers_id',
@@ -66,7 +77,7 @@ export async function addOrgsToView(eventId: string): Promise<Array<Org>>{
 export async function getParticipants(eventId: string): Promise<Array<Participant>>{
     let participants = []
     const response = await fetch(
-        `${url}/event/participants`, {
+        `${API_URL}/event/participants`, {
             method: "POST",
             body: JSON.stringify({
                 "event_id": eventId,
@@ -86,7 +97,7 @@ export async function getParticipants(eventId: string): Promise<Array<Participan
 
 // send invite to org
 export async function inviteOrg(email: string, role: string){
-    const response = await fetch(`${url}/events/invite-org`, {
+    const response = await fetch(`${API_URL}/events/invite-org`, {
         headers: {"Content-Type": "application/json"},
         method: "POST",
         body: JSON.stringify({
