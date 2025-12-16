@@ -1,23 +1,21 @@
-import { requestMagicLink } from '@/utils/auth';
-import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View, Text } from 'react-native';
+import { Link, useRouter } from 'expo-router';
+import { requestMagicLink } from '@/utils/auth';
 import { TextInput, Button } from 'react-native-paper';
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
 
-  // sendRequest
-  // wrap requestMagicLink function
+  // Request magic link
   async function sendRequest() {
     if (!email) {
       return;
     }
     else {
-      let res = await requestMagicLink(email);
-      if (res == "success"){
-        console.log("chaning page");
+      let reqSuccess = await requestMagicLink(email);
+      if (reqSuccess == true){
         router.replace({
           pathname: "/login/verifyotp",
           params: {"email": email}
@@ -29,7 +27,7 @@ export default function Login() {
   return (
     <View className={'flex-1 p-16 '}>
       <Text className={'font-bold text-xl'}>Eventium</Text>
-      <View className={'flex-1 justify-center gap-16'}>
+      <View className={'flex-1 justify-center gap-8'}>
         <Text className={'text-3xl font-semibold'}>Log In</Text>
         <TextInput 
           mode={'outlined'}

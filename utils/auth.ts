@@ -1,64 +1,92 @@
+import { API_URL } from './constants';
+import { ToastAndroid } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
-const endpoint = "https://d9ea8563eb21.ngrok-free.app"
+/*
+getUser (locally)
 
-// Get logged in user
+check if a user is already signed in.
+*/
 export async function getUser() {
     let result = await SecureStore.getItemAsync("access_token");
     // SecureStore.deleteItemAsync("access_token"); // for temp use only
-    if (result){
+    if (result) {
         return result;
     }
     return null;
 }
 
-// Request a magic link
-export async function requestMagicLink(email: string){
-    let response = await fetch(`${endpoint}/auth/get-magic-link`, {
-        method: "POST",
-        headers: {'Cotent-Type': 'application/json'},
-        body: JSON.stringify({ email })
-    })
-    if(response.status == 200){
-        return "success";
+/* 
+requestMagicLink
+*/
+export async function requestMagicLink(email: string): Promise<boolean> {
+    try {
+        let response = await fetch(`${API_URL}/auth/get-magic-link`, {
+            method: "POST",
+            headers: { 'Cotent-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        })
+        if (response.status == 200) {
+            return true;
+        }
+        return false;
     }
-    return "failed"
+
+    catch(e) {
+        ToastAndroid.show("Unexpected error occurred. Please try again.", ToastAndroid.SHORT);
+        console.error(`Failed to request a magic link: ${e}`);
+        return false;
+    }
 }
 
-// Verify Otp
-export async function verifyOtp(email:string, token: string): Promise<string>{
-    let response = await fetch(`${endpoint}/auth/verify-otp`, {
+/*
+verifyOtp
+check if the otp provided is correct or not.
+ */
+export async function verifyOtp(email: string, token: string): Promise<boolean> {
+    let isValid = false;
+    let response = await fetch(`${API_URL}/auth/verify-otp`, {
         method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email, token})
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, token })
     })
-    if(response.status == 200){
-        let res = await response.json();
-        if (res['msg'] == "success" && res['access_token']){
-            SecureStore.setItemAsync("access_token", res['access_token'])
-            SecureStore.setItemAsync("email", email)
-            return "success"
+    try{
+        if (response.status == 200) {
+            let res = await response.json();
+            if (res['msg'] == "success" && res['access_token']) {
+                SecureStore.setItemAsync("access_token", res['access_token'])
+                SecureStore.setItemAsync("email", email)
+                isValid = true;
+            }
         }
+
+        else {
+            console.log("failed");
+            isValid = false;
+        }
+
+        return isValid;
     }
 
-    else{
-        console.log("failed");
-        return "failed"
+    catch(e){
+        console.error(`Failed to verify OTP: ${e}`);
+        ToastAndroid.show("Unexpected Error Occured. Please Login Again.", ToastAndroid.SHORT);
+        isValid = false;
+        return isValid;
     }
-    return "";
 }
 
 // remove access_token to sign out
-export async function signOut(){
+export async function signOut() {
     SecureStore.deleteItemAsync("access_token");
 }
 
 // register user
 export async function signUp(
     email: string, name: string, phone: string, password: string
-){
+) {
     let status = "failed";
-    const resp = await fetch(`${endpoint}/auth/signup`, {
+    const resp = await fetch(`${API_URL}/auth/signup`, {
         method: "POST",
         headers: {
             "Cotent-Type": "application/json"
@@ -70,8 +98,8 @@ export async function signUp(
             "password": password
         })
     })
-    
-    if(resp.ok){
+
+    if (resp.ok) {
         status = "success";
     }
 
