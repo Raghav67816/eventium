@@ -12,6 +12,7 @@ import { Org } from "@/utils/events";
 import { getParticipants } from "@/utils/events";
 import OrgCard from "@/components/OrgCard";
 import ParticipantCard, { Participant } from "@/components/ParticipantCard";
+import InfoCard from "@/components/InfoCard";
 
 export default function EventPage() {
 
@@ -163,7 +164,8 @@ export default function EventPage() {
             </Appbar>
 
             <View className="mt-8 px-8">
-                <View className={"flex-row justify-between align-center mb-8"}>
+
+                <View className={"flex-row justify-between align-center"}>
                     <Searchbar
                         mode={'bar'}
                         style={{ width: '75%'}}
@@ -185,6 +187,9 @@ export default function EventPage() {
                             </View>
                         </PaperProvider>
                     </View>
+                </View>
+                <View className={'my-8'}>
+                    <InfoCard title={"Total Participants"} content={`${participants.length}`} />
                 </View>
                 <FlatList
                     data={filteredContent}
