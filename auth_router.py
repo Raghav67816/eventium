@@ -1,12 +1,18 @@
-from client import s_client
-from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Request
-from fastapi.exceptions import HTTPException
-from supabase_auth.errors import AuthApiError
+from utils import s_client
 
 from httpx import ReadTimeout
+from supabase_auth.errors import AuthApiError
 
+from fastapi.responses import JSONResponse
+from fastapi import APIRouter, HTTPException, Request
 
+"""
+handles authentication
+
+signup
+login
+verify
+"""
 
 auth_router = APIRouter(prefix="/auth")
 
@@ -25,35 +31,9 @@ async def signup(request: Request):
     })
 
     if user == "User already registered":
-        return JSONResponse(
-            status_code=200,
-            content={
-                "msg": "failed",
-                "detail": "already exists"
-            }
-        )
+        return HTTPException(status_code=200, detail="email already in use")
     
     else:
-        s_client.table("users").insert({
-            "name": data['name'],
-            "email": data['email']
-        }).execute()
-        ids = s_client.table("events").select("organisers_id").eq("id", 5).execute()
-        
-        if ids.data and len(ids.data) > 0:
-            print(ids.data)
-            row = ids.data[0]
-            orgs = row.get("organisers_id") or []
-            orgs.append(data['email'])
-
-            print(orgs)
-
-            out = s_client.table("events").update({
-                "organisers_id": orgs
-            }).eq("id", 5).execute()
-
-            print(out)
-
         return JSONResponse(
             status_code=200,
             content={
@@ -74,6 +54,7 @@ async def get_magic_link(request: Request):
         return JSONResponse(
             status_code=200, content={'msg': 'sent'}
         )
+    
     
 @auth_router.post("/verify-otp")
 async def verify_otp(request: Request):

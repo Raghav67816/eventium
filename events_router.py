@@ -1,94 +1,53 @@
-from client import s_client
-from fastapi import APIRouter, Request, HTTPException
+from utils import db
+
 from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Request, HTTPException
 
 events_router = APIRouter(prefix="/event")
-valid_fields = [
-    'organisers',
-    'participants',
-    'current_participants',
-    'venue',
-    'country_city',
-    'max_participants'
-]
+
+event_cursor = db.get_collection("events")
+p_cursor = db.get_collection("participants")
 
 @events_router.post("/my-events")
-async def get_my_events(request: Request):
-    data = await request.json()
-    events = s_client.table("events").select("*").contains("organisers_id", [data['email']]).execute()
+async def get_events(request: Request):
+    json = await request.json()
+    email = json['email']
 
-    if events:
-        print(events.data)
-        return JSONResponse(
-            status_code=200, content={
-                "msg": "success",
-                "events": events.data
-            }
-        )
-   
-@events_router.post("/query/general")
-async def general_query(request: Request):
-    data = await request.json()
-    if data['field'] in valid_fields:
-        query = s_client.table("events").select(data['field']).eq("id", data['id']).execute()
-        print(query.data)
-        if query:
-            return JSONResponse(
-                status_code=200,
-                content={
-                    "msg": "success",
-                    "data": query.data                    
-                }
-            )
+    if not email:
+        raise HTTPException(status_code=400, detail="email required")
+
+    try:
+        events = event_cursor.find({"organisers.email": email}).to_list()
         
-    else:
-        raise HTTPException(400, detail="not a valid field")
+        for event in events:
+            event['_id'] = str(event['_id'])
+            event['startDate'] = str(event['startDate'])
+
+        print(events)
+
+        return JSONResponse(content=list(events))
     
-@events_router.post("/participants")
+    except Exception as e:
+        print(str(e))
+        raise HTTPException(status_code=500, detail=f"unexpected error: {str(e)}")
+
+
+@events_router.post("/get-participants")
 async def get_participants(request: Request):
-    data = await request.json()
-    p = s_client.table("participants").select("id, name, age, phone, email, age").eq("event_id", data['event_id']).execute()
-    if p:
-        return JSONResponse(
-            status_code=200,
-            content={
-                "msg": "success",
-                "participants": p.data
-            }
-        )
+    json = await request.json()
+    event_id = json.get('event_id')
+
+    if not event_id:
+        raise HTTPException(status_code=400, detail="event_id required")
     
+    try:
+        participants = p_cursor.find({'event_id': event_id}).to_list()
+        
+        for p in participants:
+            p['_id'] = str(p['_id'])
+        
+        return JSONResponse(participants)
 
-# @events_router.post("/add-org")
-# # async def add_org(request: Request):
-# def add_org(event_id: str, org_id: str):
-#     # data = await request.json()
-#     # if not data['event-name'] and not data['org-id']:
-#     if not event_id and not org_id:
-#         raise HTTPException(status_code=403, detail="provide all details")
+    except Exception as e:
+        raise HTTPException(500, detail='unexpected error')
     
-#     else:
-#         # org = s_client.table("users").select("email").eq("id", data['org-id']).execute()
-#         org = s_client.table("users").select("id").eq("email", org_id).execute()
-#         if org:
-#             event = s_client.table("events").select("organisers").eq("id", event_id).execute()
-#             if event:
-#                 orgs = event.data
-#                 orgs.append(org_id)
-#                 s_client.table("events").update({"organisers": orgs}).eq("id", event_id).execute()
-#                 return JSONResponse(
-#                     status_code=200,
-#                     content={
-#                         "msg": "success"
-#                     }
-#                 )
-
-@events_router.post("/invite-org")
-async def invite_org(request: Request):
-    data = await request.json()
-    if data:
-        s_client.auth.admin.invite_user_by_email(data['email'], options={
-            "redirect_to": "https://google.com"
-        })
-    else:
-        raise HTTPException(status_code=403, detail="provide email")
-
