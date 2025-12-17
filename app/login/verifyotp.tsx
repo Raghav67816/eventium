@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { verifyOtp } from "@/utils/auth";
-import { View, Text} from "react-native";
-import { Button } from "react-native-paper";
-import { TextInput } from "react-native-paper";
+import { View } from "react-native";
+import { TextInput, Text, useTheme } from "react-native-paper";
 import { useLocalSearchParams } from "expo-router";
+import { Button, MD3DarkTheme } from "react-native-paper";
 
 export default function VerifyOtp() {
+
     const router = useRouter();
+    const { colors } = useTheme();
+
     const [otp, setOtp] = useState("");
     const [isInvalid, setInvalidOtp] = useState(false);
     const { email } = useLocalSearchParams();
@@ -23,7 +26,7 @@ export default function VerifyOtp() {
     }
 
     return (
-        <View className={'flex-1 p-16'}>
+        <View className={'flex-1 p-16'} style={{backgroundColor: colors.background}}>
             <Text className={'font-semibold'}>Eventium</Text>
             <View className={'flex-1 gap-4 justify-center'}>
                 <Text className={'font-semibold text-xl'}>Enter Your OTP</Text>

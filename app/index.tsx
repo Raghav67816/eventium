@@ -4,12 +4,17 @@ import { View, Text } from 'react-native';
 import { getEvents } from '@/utils/events';
 import { useEffect, useState } from 'react';
 import EventCard from '@/components/EventCard';
-import { MD3Colors } from 'react-native-paper';
-import { Appbar, FAB } from "react-native-paper"
+import { Appbar, FAB, MD3DarkTheme } from "react-native-paper";
+import { ActivityIndicator, MD3Colors } from 'react-native-paper';
+
+import { useTheme } from 'react-native-paper';
 
 
 export default function Home() {
+  const { colors } = useTheme();
+
   const router = useRouter();
+  const [isLoading, setLoading] = useState(true);
   const [events, setEvents] = useState<any[]>([]);
 
   useEffect(() => {
@@ -19,10 +24,13 @@ export default function Home() {
         router.replace('/login/login');
       }
       else {
+        setLoading(true);
         const events = await getEvents();
         if (events == null) {
+          setLoading(false);
           return;
         }
+        setLoading(false);
         setEvents(await getEvents());
       }
     }
@@ -37,8 +45,14 @@ export default function Home() {
     router.replace("/new-event");
   }
 
+  if (isLoading) {
+    return (
+      <ActivityIndicator size={"large"} animating={isLoading} />
+    )
+  }
+
   return (
-    <View style={{backgroundColor: `${MD3Colors.primary0}`}} className={'flex-1'}>
+    <View style={{ backgroundColor: `${colors.background}` }} className={'flex-1'}>
       <Appbar mode={'small'} >
         <Appbar.Content title={"My Events"} titleStyle={{ fontSize: 18 }} />
         <Appbar.Action icon={'account'} onPress={goToProfile} />
@@ -59,19 +73,20 @@ export default function Home() {
             <View className={'h-5/6 items-center align-center justify-center'}>
               <Text className={'text-gray-600'}>No Events Found.</Text>
             </View>
-            <FAB
-              onPress={goToNewEvents}
-              icon={'plus'}
-              style={{
-                position: 'absolute',
-                margin: 16,
-                right: 0,
-                bottom: 0
-              }}
-            />
           </View>
         )
         }
+      </View>
+      <View className="flex-1">
+        <FAB
+          icon="plus"
+          onPress={goToNewEvents}
+          style={{
+            position: 'absolute',
+            right: 16,
+            bottom: 16,
+          }}
+        />
       </View>
     </View>
   );

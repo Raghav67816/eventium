@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { MD3DarkTheme, Text, useTheme } from 'react-native-paper';
 import { Link, useRouter } from 'expo-router';
 import { requestMagicLink } from '@/utils/auth';
 import { TextInput, Button } from 'react-native-paper';
 
 export default function Login() {
+  const { colors } = useTheme();
+
   const router = useRouter();
   const [email, setEmail] = useState("");
 
@@ -26,7 +28,7 @@ export default function Login() {
   }
 
   return (
-    <View className={'flex-1 p-16 '}>
+    <View className={'flex-1 p-16 '} style={{backgroundColor: colors.background}} >
       <Text className={'font-bold text-xl'}>Eventium</Text>
       <View className={'flex-1 justify-center gap-8'}>
         <Text className={'text-3xl font-semibold'}>Log In</Text>
@@ -40,7 +42,9 @@ export default function Login() {
         <Text>We will send you a magic link. Check your email</Text>
         <View className={'gap-6 items-center'}>
           <Button mode={'contained'} className='w-1/2 h-[40]' onPress={sendRequest}>Submit</Button>
-          <Link href={"/login/signup"} className={'text-md underline'}>Create New Account</Link>
+          <Link href={"/login/signup"}>
+            <Text className={'underline'}>Create New Account</Text>
+          </Link>
         </View>
       </View>
     </View>

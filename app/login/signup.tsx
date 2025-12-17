@@ -1,12 +1,14 @@
-import { Button } from 'react-native-paper';
+import { Button, MD3DarkTheme, useTheme } from 'react-native-paper';
 import { signUp } from '@/utils/auth';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View, ToastAndroid, Text} from 'react-native';
-import { TextInput, HelperText } from 'react-native-paper';
+import { View, ToastAndroid} from 'react-native';
+import { TextInput, HelperText, Text } from 'react-native-paper';
 
 export default function SignUp() {
     const router = useRouter();
+    const { colors } = useTheme();
+
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
@@ -42,7 +44,7 @@ export default function SignUp() {
     }
 
     return (
-        <View className={'flex-1 p-16 '}>
+        <View className={'flex-1 p-16 '} style={{backgroundColor: colors.background}}>
             <Text className={'font-bold text-xl'}>Eventium</Text>
             <View className={'flex-1 justify-center gap-4'}>
                 <Text className={'text-3xl font-semibold'}>Sign Up</Text>
@@ -83,7 +85,9 @@ export default function SignUp() {
                 </View>
                 <View className={'gap-6 items-center'}>
                     <Button onPress={handleSignup} className={'w-1/2 h-[40]'} mode={'contained'}>Submit</Button>
-                    <Link href={"/login/login"} className={'text-md underline'}>Already Have An Account ?</Link>
+                    <Link href={"/login/login"}>
+                        <Text className={'underline'}>Already Have An Account ?</Text>
+                    </Link>
                 </View>
             </View>
         </View>

@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 
-import { MD3Colors, Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { useEffect, useState, useMemo} from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCameraPermissions, CameraView } from "expo-camera";
@@ -14,7 +14,10 @@ import OrgCard from "@/components/OrgCard";
 import ParticipantCard, { Participant } from "@/components/ParticipantCard";
 
 export default function EventPage() {
+
     const router = useRouter();
+    const { colors } = useTheme();
+
     const [menuVisible, setMenuVisible] = useState(false);
     const { eventName, eventId } = useLocalSearchParams();
     const [perm, requestPerm] = useCameraPermissions();
@@ -97,14 +100,14 @@ export default function EventPage() {
     }
 
     return (
-        <View style={{backgroundColor: `${MD3Colors.primary0}`}}>
+        <View style={{backgroundColor: colors.background}}>
             <Modal
                 visible={isOrgModalVisible}
                 animationType="slide"
                 transparent={true}
             >
-                <View className="flex-1 justify-center items-center bg-black/50">
-                    <View className="w-5/6 h-auto rounded-xl p-6 shadow-2xl">
+                <View className="flex-1 justify-center items-center" style={{backgroundColor: colors.background}}>
+                    <View className="w-5/6 h-auto rounded-xl p-6" style={{backgroundColor: colors.backdrop}}>
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Organisers</Text>
                             <IconButton onPress={toggleOrgModal} icon={"close"} />
@@ -134,8 +137,8 @@ export default function EventPage() {
                 animationType="slide"
                 transparent={true}
             >
-                <View style={{backgroundColor: `${MD3Colors.primary0}`}} className="flex-1 justify-center items-center bg-black/50">
-                    <View className="w-5/6 h-auto rounded-xl p-6 shadow-2xl">
+                <View style={{backgroundColor: `${colors.background}`}} className="flex-1 justify-center items-center bg-black/50">
+                    <View className="w-5/6 h-auto rounded-xl p-6" style={{backgroundColor: colors.backdrop}}>
                         <View className={"flex-row items-center justify-between"}>
                             <Text className="text-xl font-bold">Scan Qr Code</Text>
                             <IconButton onPress={toggleQrModal} icon={"close"} />
@@ -163,7 +166,7 @@ export default function EventPage() {
                 <View className={"flex-row justify-between align-center mb-8"}>
                     <Searchbar
                         mode={'bar'}
-                        style={{ width: '75%', backgroundColor: "#dddddd" }}
+                        style={{ width: '75%'}}
                         onChangeText={onTextChange}
                         placeholder={"Search"}
                         value={input}
