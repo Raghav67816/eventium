@@ -63,10 +63,10 @@ export default function Home() {
             key={index}
             eventId={event_.id}
             event_name={event_.name}
-            place={event_.country_city}
+            place={`${event_.city}, ${event_.country}`}
             venue={event_.venue}
-            currentParticipants={event_.current_participants}
-            maxParticipants={event_.max_participants}
+            currentParticipants={event_.currentParticipants}
+            maxParticipants={event_.maxParticipants}
           />
         ))) : (
           <View>

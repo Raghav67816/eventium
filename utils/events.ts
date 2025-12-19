@@ -20,7 +20,7 @@ export async function getEvents(){
 
     try{
         const response = await fetch(
-            `${API_URL}/event/my-events`,
+            `${API_URL}/event/events`,
             {
                 headers: {"Authorization": `Bearer ${token}`, 
                 "Content-Type": "application/json"
@@ -32,11 +32,7 @@ export async function getEvents(){
 
         if (response.ok){
             const res = await response.json();
-            console.log("events");
-            console.log(res['events']);
-            events = res['events'];
-
-            console.debug(`type of events: ${typeof(events)}`);
+            events = res;
         }
     }
 
@@ -49,49 +45,31 @@ export async function getEvents(){
     return events;
 }
 
-// Add orgs to view
-export async function addOrgsToView(eventId: string): Promise<Array<Org>>{
-    let orgs = [];
-    const response = await fetch(
-        `${API_URL}/event/query/general`,
-        {
-            body: JSON.stringify({
-                'field': 'organisers_id',
-                'id': eventId
-            }),
-            method: "POST"
-        }
-    )
-
-    if (response.ok){
-        const orgs_ = await response.json();
-        orgs = orgs_.data.organisers
-    }
-
-    console.log("error");
-    console.log(orgs);
-    return orgs;
-}
 
 // Fetch participants
 export async function getParticipants(eventId: string): Promise<Array<Participant>>{
-    let participants = []
-    const response = await fetch(
-        `${API_URL}/event/participants`, {
-            method: "POST",
-            body: JSON.stringify({
-                "event_id": eventId,
-            })
-        }
-    )
+    let participants = [];
 
-    if (response.ok){
-        const data_ = await response.json();
-        participants = data_.participants;
+    try {
+        const response = await fetch(
+            `${API_URL}/event/participants`, {
+                method: "POST",
+                body: JSON.stringify({
+                    "event_id": eventId,
+                })
+            }
+        )
+
+        if (response.ok){
+            const data_ = await response.json();
+            participants = data_.participants;
+        }
     }
 
-    console.log("participants");
-    console.log(participants);
+    catch(e){
+        console.error(`Failed to fetch participants: ${e}`);
+        ToastAndroid.show("Failed to fetch participants, please try again.", ToastAndroid.SHORT);
+    }
     return participants;
 }
 
