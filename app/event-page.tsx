@@ -2,7 +2,7 @@ import Fuse from "fuse.js";
 
 import { Text, useTheme } from "react-native-paper";
 import { useEffect, useState, useMemo} from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
 import { useCameraPermissions, CameraView } from "expo-camera";
 import { View, Modal, ScrollView, FlatList, StyleSheet } from "react-native"
 import { Menu, Searchbar, TextInput, PaperProvider, Appbar, Button, IconButton } from "react-native-paper";
@@ -19,10 +19,12 @@ export default function EventPage() {
     const router = useRouter();
     const { colors } = useTheme();
 
-    const [menuVisible, setMenuVisible] = useState(false);
     const { eventName, eventId } = useLocalSearchParams();
+    const { organisers } = useLocalSearchParams();
+
+    const [menuVisible, setMenuVisible] = useState(false);
+
     const [perm, requestPerm] = useCameraPermissions();
-    const [isOrgModalVisible, setOrgModalVisible] = useState(false);
     let [isQrModalVisible, setQrModalVisible] = useState(false);
     const [input, setInput] = useState("");
     const [orgs, setOrgs] = useState<Org[]>([]);
@@ -59,7 +61,13 @@ export default function EventPage() {
     }
 
     function toggleOrgModal() {
-        setOrgModalVisible(!isOrgModalVisible);
+        router.push({
+            pathname: '/modals/OrganisersModal',
+            params: {
+                eventId: eventId,
+                orgs: organisers
+            }
+        });
     }
 
     async function toggleQrModal() {
@@ -88,7 +96,7 @@ export default function EventPage() {
 
         const fetchParticipants = async () => {
             const participants_ = await getParticipants(eventId.toString());
-            setParticipants(participants_);
+            setParticipants(participants);
             setFilteredContent(participants_);
         }
 
@@ -102,37 +110,6 @@ export default function EventPage() {
 
     return (
         <View style={{backgroundColor: colors.background}}>
-            <Modal
-                visible={isOrgModalVisible}
-                animationType="slide"
-                transparent={true}
-            >
-                <View className="flex-1 justify-center items-center" style={{backgroundColor: colors.background}}>
-                    <View className="w-5/6 h-auto rounded-xl p-6" style={{backgroundColor: colors.backdrop}}>
-                        <View className={"flex-row items-center justify-between"}>
-                            <Text className="text-xl font-bold">Organisers</Text>
-                            <IconButton onPress={toggleOrgModal} icon={"close"} />
-                        </View>
-                        <View>
-                            <View className={"mb-8"}>
-                                <Text>Work in Progress. Workflow broken due to db restructure</Text>
-                                <ScrollView className={"mt-8 mb-8"}>
-                                    {orgs.map((org, index) => (
-                                        <OrgCard key={index} name={org.name} email={org.email}></OrgCard>
-                                    ))}
-                                </ScrollView>
-                                <View className={"flex-row flex justify-between items-center"}>
-                                    <TextInput
-                                     mode={'outlined'}
-                                     style={{width: "75%"}} 
-                                     placeholder="Email" />
-                                    <Button mode={'contained'} icon={"plus"}>Add</Button>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
             <Modal
                 visible={isQrModalVisible}
                 animationType="slide"

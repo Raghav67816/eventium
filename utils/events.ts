@@ -6,6 +6,7 @@ import { Participant } from '@/components/ParticipantCard';
 export type Org = {
     name: string,
     email: string,
+    pfp: string
 };
 
 /*
@@ -48,6 +49,7 @@ export async function getEvents(){
 
 // Fetch participants
 export async function getParticipants(eventId: string): Promise<Array<Participant>>{
+    console.log(eventId)
     let participants = [];
 
     try {
@@ -55,14 +57,13 @@ export async function getParticipants(eventId: string): Promise<Array<Participan
             `${API_URL}/event/participants`, {
                 method: "POST",
                 body: JSON.stringify({
-                    "event_id": eventId,
+                    "event_id": eventId.toString(),
                 })
             }
         )
 
         if (response.ok){
-            const data_ = await response.json();
-            participants = data_.participants;
+            participants = await response.json();
         }
     }
 
@@ -73,18 +74,30 @@ export async function getParticipants(eventId: string): Promise<Array<Participan
     return participants;
 }
 
-// send invite to org
-export async function inviteOrg(email: string, role: string){
-    const response = await fetch(`${API_URL}/events/invite-org`, {
-        headers: {"Content-Type": "application/json"},
-        method: "POST",
-        body: JSON.stringify({
-            "email": email,
-            "role": role
-        })
-    })
+// get organisers
+export async function getOrgs(event_id: string){
+    let orgs = [];
 
-    if(response.ok){
-        console.log("invite sent");
+    try {
+        const response = await fetch(`${API_URL}/events/orgs`, {
+            headers: {"Content-Type": "application/json"},
+            method: "POST",
+            body: JSON.stringify({
+                "event_id": event_id
+            })
+        })
+
+        if(response.ok){
+            orgs = await response.json();
+        }
+
+        return orgs;
+    }
+
+    catch(e){
+        console.error(`Failed to fetch organisers: ${e}`);
+        ToastAndroid.show("Failed to fetch organisers, please try again.", ToastAndroid.SHORT);
+        return orgs;
     }
 }
+

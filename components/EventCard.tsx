@@ -4,12 +4,13 @@ import { Text, Icon } from 'react-native-paper';
 import { Button, Surface } from 'react-native-paper';
 
 type EventCardProps = {
-  event_name: string;
-  place: string;
-  maxParticipants: number;
-  eventId: number;
+  event_name: string,
+  place: string,
+  maxParticipants: number,
+  eventId: number,
   venue: string,
-  currentParticipants: number;
+  currentParticipants: number,
+  orgs: Array<Object>
 };
 
 export default function EventCard({
@@ -19,6 +20,7 @@ export default function EventCard({
   maxParticipants,
   eventId,
   currentParticipants,
+  orgs
 }: EventCardProps) {
 
   function onPress__() {
@@ -26,12 +28,14 @@ export default function EventCard({
       pathname: "/event-page",
       params: {
         eventName: event_name,
-        eventId: eventId
+        eventId: eventId.toString(),
+        organisers: JSON.stringify(organisers_)
       }
     })
   }
 
   const router = useRouter();
+  const organisers_ = orgs;
 
   return (
     <Surface elevation={2} className={'w-1/2'} style={{borderRadius: 5}}>

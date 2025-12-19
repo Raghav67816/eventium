@@ -9,7 +9,13 @@ export default function Layout() {
     <PaperProvider theme={MD3DarkTheme}>
       <Stack screenOptions={{
         headerShown: false
-      }} />
+      }}>
+        <Stack.Screen name='index' />
+        <Stack.Screen name='modals/OrganisersModal' options={{
+          presentation: 'transparentModal',
+          animation: 'fade'
+        }} />
+      </Stack>
     </PaperProvider>
   )
 }

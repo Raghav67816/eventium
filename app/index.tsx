@@ -61,12 +61,13 @@ export default function Home() {
         {events.length > 0 ? (events.map((event_, index) => (
           <EventCard
             key={index}
-            eventId={event_.id}
+            eventId={event_.event_id}
             event_name={event_.name}
             place={`${event_.city}, ${event_.country}`}
             venue={event_.venue}
             currentParticipants={event_.currentParticipants}
             maxParticipants={event_.maxParticipants}
+            orgs={event_.organisers}
           />
         ))) : (
           <View>
