@@ -101,3 +101,30 @@ export async function getOrgs(event_id: string){
     }
 }
 
+// fetch items added by organisers
+export default async function fetchItems(event_id: string): Promise<string[]> {
+    let items = [];
+
+    try {
+        const response = await fetch(`${API_URL}/event/items`, {
+            headers: { "Content-Type": "application/json" },
+            method: "POST",
+            body: JSON.stringify({
+                "event_id": event_id
+            })
+        })
+
+        if (response.ok) {
+            items = await response.json();
+        }
+
+        return items;
+    }
+
+    catch (e) {
+        console.error(`Failed to fetch items: ${e}`);
+        ToastAndroid.show("Failed to fetch items, please try again.", ToastAndroid.SHORT);
+        return items;
+    }
+}
+

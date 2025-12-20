@@ -27,7 +27,7 @@ export default function EventPage() {
     const [perm, requestPerm] = useCameraPermissions();
     let [isQrModalVisible, setQrModalVisible] = useState(false);
     const [input, setInput] = useState("");
-    const [orgs, setOrgs] = useState<Org[]>([]);
+    
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [filteredContent, setFilteredContent] = useState<Participant[]>([]);
 
@@ -71,17 +71,12 @@ export default function EventPage() {
     }
 
     async function toggleQrModal() {
-        if (!perm?.granted) {
-            const permReq = await requestPerm();
-            if (permReq.granted) {
-                isQrModalVisible = true;
-                setQrModalVisible(isQrModalVisible);
+        router.push({
+            pathname: '/modals/QrModal',
+            params: {
+                eventId: eventId
             }
-        }
-
-        if (perm?.granted) {
-            setQrModalVisible(!isQrModalVisible);
-        }
+        });
     }
 
     function toHome() {
@@ -110,29 +105,6 @@ export default function EventPage() {
 
     return (
         <View style={{backgroundColor: colors.background}}>
-            <Modal
-                visible={isQrModalVisible}
-                animationType="slide"
-                transparent={true}
-            >
-                <View style={{backgroundColor: `${colors.background}`}} className="flex-1 justify-center items-center bg-black/50">
-                    <View className="w-5/6 h-auto rounded-xl p-6" style={{backgroundColor: colors.backdrop}}>
-                        <View className={"flex-row items-center justify-between"}>
-                            <Text className="text-xl font-bold">Scan Qr Code</Text>
-                            <IconButton onPress={toggleQrModal} icon={"close"} />
-                        </View>
-                        <View>
-                            <View className={"mb-8"}>
-                                <Text>Use this to manage check-in and food.</Text>
-                                <View className={"w-full aspect-square mt-8 mb-8 overflow-hidden rounded-lg"}>
-                                    <CameraView style={styles.cview} facing={"back"} onBarcodeScanned={onBarcodeScanned} />
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
             <Appbar mode={'small'}>
                 <Appbar.BackAction onPress={toHome} />
                 <Appbar.Content title={eventName.toString()} titleStyle={{ fontSize: 18 }} />
@@ -191,10 +163,3 @@ export default function EventPage() {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    cview: {
-        flex: 1,
-        width: "100%",
-    }
-})
