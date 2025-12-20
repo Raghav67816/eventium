@@ -60,14 +60,15 @@ async def get_items(request: Request):
         raise HTTPException(status_code=400, detail="event_id required")
 
     try:
-        items = event_cursor.find({"event_id": data['event_id']})
-        return JSONResponse(content=items.to_list())
+        items = event_cursor.find_one({"event_id": int(data['event_id'])}, {"_id": 0, "items": 1})
+
+        return JSONResponse(content=items['items'])
 
     except Exception as e:
         print(str(e))
         raise HTTPException(500, detail='unexpected error')
     
-@events_router.post("add_items")
+@events_router.post("/add_items")
 async def add_items(request: Request):
     data = await request.json()
     if not data['items'] and not data['event_id']:

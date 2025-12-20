@@ -10,15 +10,11 @@ p_cursor = db.get_collection("participants")
 async def get_items(request: Request):
     json = await request.json()
     if not json['_id']:
-        raise HTTPException(400, detail="_id and item_name required")
+        raise HTTPException(400, detail="_id is required")
     
     try:
-        issued_items = p_cursor.find({"_id": ObjectId(json['_id'])})
-
-        for item in issued_items:
-            item['_id'] = str(item['_id'])
-
-        return JSONResponse(content=issued_items.to_list())
+        issued_items = p_cursor.find_one({"_id": ObjectId(json['_id'])}, {"_id": 0, "items": 1})
+        return JSONResponse(content=issued_items['items'])
 
     except Exception as e:
         print(str(e))
@@ -28,11 +24,12 @@ async def get_items(request: Request):
 async def issue_item(request: Request):
     data = await request.json()
 
-    if not data['item_name'] and not data['_id']:
+    if not data['items'] and not data['_id']:
         raise HTTPException(400, detail="_id and item_name is required")
     
     try:
-        p_cursor.update_one({'_id': ObjectId(data['_id'])}, {"$addToSet": {"items": data['item_name']}})
+        print(f"items to add: {data.get("items")}")
+        p_cursor.update_one({'_id': ObjectId(data['_id'])}, {"$addToSet": {"items": {"$each": data['items']}}})
         return JSONResponse(content="success")
 
     except Exception as e:
