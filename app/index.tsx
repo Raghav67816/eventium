@@ -1,8 +1,8 @@
 import { getUser } from '@/utils/auth';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { View, Text } from 'react-native';
 import { getEvents } from '@/utils/events';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import EventCard from '@/components/EventCard';
 import { Appbar, FAB, MD3DarkTheme } from "react-native-paper";
 import { ActivityIndicator, MD3Colors } from 'react-native-paper';
@@ -16,6 +16,12 @@ export default function Home() {
   const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [events, setEvents] = useState<any[]>([]);
+
+  useFocusEffect(useCallback(() => {
+    router.push({
+      pathname: '/modals/DevModal'
+    })
+  }, []))
 
   useEffect(() => {
     async function checkUser() {
@@ -34,6 +40,8 @@ export default function Home() {
         setEvents(await getEvents());
       }
     }
+
+
     checkUser();
   }, [])
 
