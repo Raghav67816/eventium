@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { useRouter } from "expo-router";
-import { Surface, Text, IconButton, Button, useTheme, TextInput } from "react-native-paper";
+import { Surface, Text, Button, useTheme, TextInput } from "react-native-paper";
 import { useState } from "react";
 
 export default function DevModal() {
@@ -14,6 +14,7 @@ export default function DevModal() {
         })
         if(res.ok){
             setPingResult("Server responded. Success")
+            router.replace("../");
         }
         else{
             setPingResult("Server didn't responde. Please check your setup again.")
@@ -45,10 +46,10 @@ export default function DevModal() {
                         </View>
                         <View className={'gap-4'}>
                             <TextInput 
-                            placeholder={'https://xyz.ngrok.free.app'}
+                            // placeholder={'https://xyz.ngrok.free.app'}
                             mode={'outlined'}
                             label={"Server URL"}
-                            value={url}
+                            // value={url}
                              />
                             <Button onPress={() => {
                                 pingServer();
