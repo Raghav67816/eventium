@@ -1,4 +1,4 @@
-from utils import s_client
+from utils import s_client, db
 
 from httpx import ReadTimeout
 from supabase_auth.errors import AuthApiError
@@ -15,6 +15,7 @@ verify
 """
 
 auth_router = APIRouter(prefix="/auth")
+event_cursor = db.get_collection("events")
 
 @auth_router.post("/signup")
 async def signup(request: Request):
@@ -34,6 +35,14 @@ async def signup(request: Request):
         return HTTPException(status_code=200, detail="email already in use")
     
     else:
+
+        # for development only
+        event_cursor.update_one({"event_id": 5}, {"$push": {"organisers": {
+            "name": data['name'],
+            "email": data['email'],
+            "pfp": "https://placehold.co/600x400/EEE/31343C"
+        }}})
+
         return JSONResponse(
             status_code=200,
             content={

@@ -28,7 +28,7 @@ async def issue_item(request: Request):
         raise HTTPException(400, detail="_id and item_name is required")
     
     try:
-        print(f"items to add: {data.get("items")}")
+        print(f"items to add: {data.get('items')}")
         p_cursor.update_one({'_id': ObjectId(data['_id'])}, {"$addToSet": {"items": {"$each": data['items']}}})
         return JSONResponse(content="success")
 
