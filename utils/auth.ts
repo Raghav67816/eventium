@@ -1,6 +1,17 @@
-import { API_URL } from './constants';
 import { ToastAndroid } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+
+
+export async function setUrl(url: string){
+    await SecureStore.setItemAsync("url", url);
+}
+
+export async function getUrl(){
+    let url = await SecureStore.getItemAsync("url");
+    return url;
+}
+
+let url = getUrl();
 
 /*
 getUser (locally)
@@ -9,6 +20,7 @@ check if a user is already signed in.
 */
 export async function getUser() {
     let result = await SecureStore.getItemAsync("access_token");
+    // console.log(result);
     // SecureStore.deleteItemAsync("access_token"); // for temp use only
     if (result) {
         return result;
@@ -21,7 +33,7 @@ requestMagicLink
 */
 export async function requestMagicLink(email: string): Promise<boolean> {
     try {
-        let response = await fetch(`${API_URL}/auth/get-magic-link`, {
+        let response = await fetch(`${url}/auth/get-magic-link`, {
             method: "POST",
             headers: { 'Cotent-Type': 'application/json' },
             body: JSON.stringify({ email })
@@ -45,7 +57,7 @@ check if the otp provided is correct or not.
  */
 export async function verifyOtp(email: string, token: string): Promise<boolean> {
     let isValid = false;
-    let response = await fetch(`${API_URL}/auth/verify-otp`, {
+    let response = await fetch(`${url}/auth/verify-otp`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, token })
@@ -86,7 +98,7 @@ export async function signUp(
     email: string, name: string, phone: string, password: string
 ) {
     let status = "failed";
-    const resp = await fetch(`${API_URL}/auth/signup`, {
+    const resp = await fetch(`${url}/auth/signup`, {
         method: "POST",
         headers: {
             "Cotent-Type": "application/json"

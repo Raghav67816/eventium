@@ -1,4 +1,4 @@
-import { API_URL } from './constants';
+import { getUrl } from './auth';
 import { ToastAndroid } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { Participant } from '@/components/ParticipantCard';
@@ -9,19 +9,23 @@ export type Org = {
     pfp: string
 };
 
+let url = getUrl();
+
 /*
 getEvents
 
 get events from the db
  */
 export async function getEvents(){
+
+    console.log(url);
     let events = [];
     const email = await SecureStore.getItemAsync("email");
     const token = await SecureStore.getItemAsync("access_token");
 
     try{
         const response = await fetch(
-            `${API_URL}/event/events`,
+            `${url}/event/events`,
             {
                 headers: {"Authorization": `Bearer ${token}`, 
                 "Content-Type": "application/json"
@@ -54,7 +58,7 @@ export async function getParticipants(eventId: string): Promise<Array<Participan
 
     try {
         const response = await fetch(
-            `${API_URL}/event/participants`, {
+            `${url}/event/participants`, {
                 method: "POST",
                 body: JSON.stringify({
                     "event_id": eventId.toString(),
@@ -79,7 +83,7 @@ export async function getOrgs(event_id: string){
     let orgs = [];
 
     try {
-        const response = await fetch(`${API_URL}/events/orgs`, {
+        const response = await fetch(`${url}/events/orgs`, {
             headers: {"Content-Type": "application/json"},
             method: "POST",
             body: JSON.stringify({
@@ -106,7 +110,7 @@ export default async function fetchItems(event_id: string): Promise<string[]> {
     let items = [];
 
     try {
-        const response = await fetch(`${API_URL}/event/items`, {
+        const response = await fetch(`${url}/event/items`, {
             headers: { "Content-Type": "application/json" },
             method: "POST",
             body: JSON.stringify({

@@ -19,11 +19,6 @@ export default function Layout() {
           presentation: 'transparentModal',
           animation: 'fade'
         }} />
-        <Stack.Screen name='modals/DevModal' options={{
-          presentation: 'transparentModal',
-          animation: 'fade'
-        }} />
-        
       </Stack>
     </PaperProvider>
   )

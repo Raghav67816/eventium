@@ -1,8 +1,11 @@
-import { API_URL } from "./constants";
+import { getUrl } from "./auth";
 import { ToastAndroid } from "react-native";
+
+const API_URL = getUrl();
 
 export async function getIssuedItems(id: string): Promise<string[]> {
     let items = [];
+    const API_URL = getUrl();
 
     try {
         const response = await fetch(`${API_URL}/items/issued`, {
