@@ -34,7 +34,7 @@ requestMagicLink
 */
 export async function requestMagicLink(email: string): Promise<boolean> {
     try {
-        let url = getUrl();
+        let url = await getUrl();
         let response = await fetch(`${url}/auth/get-magic-link`, {
             method: "POST",
             headers: { 'Cotent-Type': 'application/json' },
@@ -59,7 +59,7 @@ check if the otp provided is correct or not.
  */
 export async function verifyOtp(email: string, token: string): Promise<boolean> {
     let isValid = false;
-    let url = getUrl();
+    let url = await getUrl();
     let response = await fetch(`${url}/auth/verify-otp`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
@@ -101,7 +101,7 @@ export async function signUp(
     email: string, name: string, phone: string, password: string
 ) {
     let status = "failed";
-    let url = getUrl();
+    let url = await getUrl();
     const resp = await fetch(`${url}/auth/signup`, {
         method: "POST",
         headers: {

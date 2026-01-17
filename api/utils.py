@@ -9,6 +9,7 @@ key = getenv("API_KEY")
 host = getenv("DB_URL")
 
 s_client: Client = create_client(url, key)
+print(host)
 db_conn = MongoClient(host, 27017)
 
 db = db_conn['eventium']

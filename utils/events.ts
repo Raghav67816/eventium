@@ -15,7 +15,7 @@ getEvents
 get events from the db
  */
 export async function getEvents(){
-    let url = getUrl();
+    let url = await getUrl();
     console.log("get eevents");
     console.log(url);
     let events = [];
@@ -108,7 +108,7 @@ export async function getOrgs(event_id: string){
 // fetch items added by organisers
 export default async function fetchItems(event_id: string): Promise<string[]> {
     let items = [];
-    let url = getUrl();
+    let url = await getUrl();
 
     try {
         const response = await fetch(`${url}/event/items`, {
