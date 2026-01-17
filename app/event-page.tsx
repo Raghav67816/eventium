@@ -24,8 +24,6 @@ export default function EventPage() {
 
     const [menuVisible, setMenuVisible] = useState(false);
 
-    const [perm, requestPerm] = useCameraPermissions();
-    let [isQrModalVisible, setQrModalVisible] = useState(false);
     const [input, setInput] = useState("");
     
     const [participants, setParticipants] = useState<Participant[]>([]);
@@ -37,10 +35,6 @@ export default function EventPage() {
 
     function closeDropdown() {
         setMenuVisible(false);
-    }
-
-    if (!perm?.granted) {
-        console.log("not granted");
     }
 
     const fuse = useMemo(() => {
@@ -91,17 +85,13 @@ export default function EventPage() {
 
         const fetchParticipants = async () => {
             const participants_ = await getParticipants(eventId.toString());
-            setParticipants(participants);
+            setParticipants(participants_);
             setFilteredContent(participants_);
         }
 
         fetchOrgs();
         fetchParticipants();
     }, [])
-
-    function onBarcodeScanned() {
-        console.log("Oh yess");
-    }
 
     return (
         <View style={{backgroundColor: colors.background}}>
@@ -141,6 +131,9 @@ export default function EventPage() {
                     <InfoCard title={"Total Participants"} content={`${participants.length}`} />
                 </View>
                 <FlatList
+                    style={{
+                        height: "auto"
+                    }}
                     data={filteredContent}
                     keyExtractor={(_, index) => index.toString()}
                     numColumns={2}

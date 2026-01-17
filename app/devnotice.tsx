@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { View } from "react-native";
 import { setUrl } from "@/utils/auth";
-import { SafeAreaView, View } from "react-native";
+import { useRouter } from "expo-router";
 import { Text, Button, useTheme, TextInput } from "react-native-paper";
+
+import * as Linking from 'expo-linking';
 
 export default function DevModal() {
     const [pingResult, setPingResult] = useState("");
@@ -10,13 +12,21 @@ export default function DevModal() {
     const { colors } = useTheme();
     const router = useRouter();
 
+    const guideUrl = "https://github.com/Raghav67816/eventium";
+
+    async function openGuide(){
+        if (await Linking.canOpenURL(guideUrl)){
+            await Linking.openURL(guideUrl)
+        }
+    }
+
     async function pingServer() {
         const res = await fetch(url);
         if (res.ok) {
             setUrl(url);
             console.log(typeof(url))
             setPingResult("Server responded. Success");
-            router.back();
+            router.replace("/");
         } else {
             setPingResult("Server didn't respond. Please check your setup again.");
         }
@@ -34,7 +44,7 @@ export default function DevModal() {
 
                 <View className="flex-row items-center gap-2">
                     <Text>Please follow the guide here:</Text>
-                    <Button mode="outlined">Visit</Button>
+                    <Button mode="outlined" onPress={openGuide}>Visit</Button>
                 </View>
 
                 <TextInput

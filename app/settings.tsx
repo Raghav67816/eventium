@@ -6,9 +6,9 @@ export default function SettingsPage(){
     const router = useRouter();
 
     return (
-        <View>
-            <Button onPress={() => {
-                router.replace("/settings")
+        <View className={'p-4'}>
+            <Button mode={'contained'} onPress={() => {
+                router.push("/devnotice")
             }}>Change Server URL</Button>
         </View>
     )
