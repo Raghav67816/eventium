@@ -9,15 +9,14 @@ export type Org = {
     pfp: string
 };
 
-let url = getUrl();
-
 /*
 getEvents
 
 get events from the db
  */
 export async function getEvents(){
-
+    let url = getUrl();
+    console.log("get eevents");
     console.log(url);
     let events = [];
     const email = await SecureStore.getItemAsync("email");
@@ -53,7 +52,7 @@ export async function getEvents(){
 
 // Fetch participants
 export async function getParticipants(eventId: string): Promise<Array<Participant>>{
-    console.log(eventId)
+    let url = await getUrl();
     let participants = [];
 
     try {
@@ -81,6 +80,7 @@ export async function getParticipants(eventId: string): Promise<Array<Participan
 // get organisers
 export async function getOrgs(event_id: string){
     let orgs = [];
+    let url = getUrl();
 
     try {
         const response = await fetch(`${url}/events/orgs`, {
@@ -108,6 +108,7 @@ export async function getOrgs(event_id: string){
 // fetch items added by organisers
 export default async function fetchItems(event_id: string): Promise<string[]> {
     let items = [];
+    let url = getUrl();
 
     try {
         const response = await fetch(`${url}/event/items`, {

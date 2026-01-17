@@ -1,4 +1,4 @@
-import { getUser } from '@/utils/auth';
+import { getUrl, getUser } from '@/utils/auth';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { View, Text } from 'react-native';
 import { getEvents } from '@/utils/events';
@@ -13,41 +13,38 @@ export default function Home() {
 
   const { colors } = useTheme();
   const router = useRouter();
-  const isUrlConfigured = useRef(false);
 
   const [isLoading, setLoading] = useState(true);
   const [events, setEvents] = useState<any[]>([]);
 
-  useFocusEffect(useCallback(() => {
-    if(!isUrlConfigured.current){
-        isUrlConfigured.current = true;
-        router.push({
-        pathname: '/devnotice'
-      })
-    }
-  }, []))
-
   useEffect(() => {
-    async function checkUser() {
-      const currentUser = await getUser();
-      if (currentUser == null) {
-        router.replace('/login/login');
+    (async () => {
+      const url = await getUrl();
+      if (!url || url == null) {
+        router.replace("/devnotice");
+        return;
       }
-      else {
-        setLoading(true);
-        const events = await getEvents();
-        if (events == null) {
-          setLoading(false);
-          return;
-        }
-        setLoading(false);
-        setEvents(await getEvents());
-      }
+
+      await checkUser();
+    })();
+  }, []);
+
+  async function checkUser() {
+    const currentUser = await getUser();
+    if (currentUser == null) {
+      router.replace('/login/login');
     }
-
-
-    checkUser();
-  }, [])
+    else {
+      setLoading(true);
+      const events = await getEvents();
+      if (events == null) {
+        setLoading(false);
+        return;
+      }
+      setLoading(false);
+      setEvents(await getEvents());
+    }
+  }
 
   function goToProfile() {
     router.replace("/profile");
@@ -59,7 +56,9 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <ActivityIndicator size={"large"} animating={isLoading} />
+      <View className='flex-1 justify-center items-center'>
+        <ActivityIndicator size={"large"} animating={isLoading} />
+      </View>
     )
   }
 

@@ -2,16 +2,17 @@ import { ToastAndroid } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
 
-export async function setUrl(url: string){
-    await SecureStore.setItemAsync("url", url);
+export function setUrl(url: string){
+    SecureStore.setItemAsync("url", url);
 }
 
-export async function getUrl(){
-    let url = await SecureStore.getItemAsync("url");
-    return url;
+export async function getUrl(): Promise<string>{
+    let result = await SecureStore.getItemAsync("url");
+    if (result) {
+        return result
+    }
+    return "";
 }
-
-let url = getUrl();
 
 /*
 getUser (locally)
@@ -33,6 +34,7 @@ requestMagicLink
 */
 export async function requestMagicLink(email: string): Promise<boolean> {
     try {
+        let url = getUrl();
         let response = await fetch(`${url}/auth/get-magic-link`, {
             method: "POST",
             headers: { 'Cotent-Type': 'application/json' },
@@ -57,6 +59,7 @@ check if the otp provided is correct or not.
  */
 export async function verifyOtp(email: string, token: string): Promise<boolean> {
     let isValid = false;
+    let url = getUrl();
     let response = await fetch(`${url}/auth/verify-otp`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
@@ -98,6 +101,7 @@ export async function signUp(
     email: string, name: string, phone: string, password: string
 ) {
     let status = "failed";
+    let url = getUrl();
     const resp = await fetch(`${url}/auth/signup`, {
         method: "POST",
         headers: {

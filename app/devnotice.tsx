@@ -6,7 +6,7 @@ import { Text, Button, useTheme, TextInput } from "react-native-paper";
 
 export default function DevModal() {
     const [pingResult, setPingResult] = useState("");
-    const [url, setUrl] = useState("");
+    const [url, setUrl_] = useState("");
     const { colors } = useTheme();
     const router = useRouter();
 
@@ -14,6 +14,7 @@ export default function DevModal() {
         const res = await fetch(url);
         if (res.ok) {
             setUrl(url);
+            console.log(typeof(url))
             setPingResult("Server responded. Success");
             router.back();
         } else {
@@ -22,7 +23,6 @@ export default function DevModal() {
     }
 
     return (
-        // <SafeAreaView className="flex-1" style={{ backgroundColor: colors.secondaryContainer }}>
         <View className="flex-1 items-center justify-center px-4" style={{ backgroundColor: colors.secondaryContainer }}>
 
             <View className="gap-4 w-[80%]">
@@ -41,7 +41,7 @@ export default function DevModal() {
                     mode="outlined"
                     label="Server URL"
                     value={url}
-                    onChangeText={setUrl}
+                    onChangeText={setUrl_}
                 />
 
                 <Button mode="contained" onPress={pingServer}>
@@ -52,6 +52,5 @@ export default function DevModal() {
             </View>
 
         </View>
-        // </SafeAreaView>
     );
 }
