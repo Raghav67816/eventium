@@ -27,22 +27,35 @@ This project was built from firsthand experience organizing events at **Daydream
 
 ## Installation
 
-### 1️⃣ Server Setup (Development / Self-Hosted)
+## 1️⃣ Server Setup (Docker – Recommended)
 
-Eventium currently requires users to **self-host the API server**.
+The Eventium API server is distributed as a **pre-built Docker image** named:
 
-#### Prerequisites
-- Docker  
-- Docker Compose  
+eventium-api
 
-#### Steps
+### Prerequisites
+- Docker (v20+)
+- Docker Compose (optional)
 
-1. Go to **Releases** and download the latest **server package**
-2. Extract the files
-3. Start the server using Docker:
-   ```bash
-   docker compose up
-   ```
+### Option A: Load Image from GitHub Release (.tar)
+
+1. Download `eventium-api.tar` from **GitHub Releases**
+2. Load the Docker image:
+   docker load -i eventium-api.tar
+
+3. Verify the image:
+   docker images
+
+4. Run the server:
+   docker run -d \
+     --name eventium-api \
+     -p 8000:8000 \
+     --env-file ./config.env \
+     eventium-api
+
+The server will be available at:
+http://localhost:8000
+
 4. The server will start locally on:
    ```
    http://localhost:8000
