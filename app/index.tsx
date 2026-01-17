@@ -67,6 +67,9 @@ export default function Home() {
       <Appbar mode={'small'} >
         <Appbar.Content title={"My Events"} titleStyle={{ fontSize: 18 }} />
         <Appbar.Action icon={'account'} onPress={goToProfile} />
+        <Appbar.Action icon={'cog'} onPress={() => {
+          router.push("/settings")
+        }} />
       </Appbar>
       <View className={'p-8'}>
         {events.length > 0 ? (events.map((event_, index) => (
